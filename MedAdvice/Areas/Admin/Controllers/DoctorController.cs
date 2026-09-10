@@ -99,6 +99,11 @@ namespace MedAdvice.Areas.Admin.Controllers
         public async Task<IActionResult> InsertDrImage(int drid)
         {
             Doctor doctor = await db.Doctors.FirstOrDefaultAsync(x => x.Id == drid);
+            if (doctor == null)
+            {
+                TempData["msg"] = "رکورد مورد نظر پیدا نشد.";
+                return RedirectToAction("InsertDoctorProfile", "Doctor");
+            }
             ViewData["doctor"] = doctor;
             HttpContext.Session.SetInt32("drid" , doctor.Id);
             return View();
@@ -108,7 +113,13 @@ namespace MedAdvice.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> InsertDoctortImageConfirm(DrImageViewModel model)
         {
-            int drid = HttpContext.Session.GetInt32("drid").Value;
+            int? sessionDrId = HttpContext.Session.GetInt32("drid");
+            if (sessionDrId == null)
+            {
+                TempData["msg"] = "نشست شما منقضی شده است. لطفا دوباره تلاش کنید.";
+                return RedirectToAction("InsertDoctorProfile", "Doctor");
+            }
+            int drid = sessionDrId.Value;
             ImageReadResult imageResult = await ImageUpload.ReadAsync(model.Doctorimg);
             if (imageResult.Ok == false)
             {

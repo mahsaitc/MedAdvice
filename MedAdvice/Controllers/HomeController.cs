@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -71,6 +72,10 @@ namespace MedAdvice.Controllers
         public async Task<IActionResult> ViewAdviceDetails(int id)
         {
             Advice advice = await Db.Advices.Include(y=>y.AdviceImages).Include(z=>z.AdviceCategory).FirstOrDefaultAsync(x=>x.Id==id);
+            if (advice == null)
+            {
+                return NotFound();
+            }
             var adviceCategoriesfirst = await Db.adviceCategories.Where(x=>x.AdviceCategoryParentId==null).ToListAsync();
             var lastfourblogs = await Db.Blogs
                 .OrderByDescending(x => x.Id)
@@ -103,7 +108,11 @@ namespace MedAdvice.Controllers
         }
         public async Task<IActionResult> DoctorDetails(int id)
         {
-            Doctor doctor = Db.Doctors.Include(x => x.DrImages).Include(z=>z.DrSpaciality). FirstOrDefault(y => y.Id == id);
+            Doctor doctor = await Db.Doctors.Include(x => x.DrImages).Include(z => z.DrSpaciality).FirstOrDefaultAsync(y => y.Id == id);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
             ViewData["doctor"] = doctor;
            
            
@@ -161,6 +170,10 @@ namespace MedAdvice.Controllers
         public async Task<IActionResult> BlogDetails(int id)
         {
             Blog blog = await Db.Blogs.Include(x => x.BlogImages).Include(z => z.BlogCategory).FirstOrDefaultAsync(y => y.Id == id);
+            if (blog == null)
+            {
+                return NotFound();
+            }
             ViewData["blog"] = blog;
             var blogcategoriesfirst = await Db.blogCategories.Where(x => x.BlogCategoryParentId == null).ToListAsync();
             var lastfourblogs = await Db.Blogs
@@ -282,6 +295,18 @@ namespace MedAdvice.Controllers
         public IActionResult AboutUs()
         {
             return View();
+        }
+
+        /// Target of UseExceptionHandler and UseStatusCodePagesWithReExecute.
+        /// Must not touch the database or throw: it is the last line of defence.
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error(int? id)
+        {
+            ViewData["StatusCode"] = id;
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
         }
     }
 }

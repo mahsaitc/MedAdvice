@@ -94,6 +94,11 @@ namespace MedAdvice.Areas.Admin.Controllers
         public async Task<IActionResult> InsertBlogImage(int blogid)
         {
             Blog blog = await db.Blogs.FirstOrDefaultAsync(x => x.Id == blogid);
+            if (blog == null)
+            {
+                TempData["msg"] = "رکورد مورد نظر پیدا نشد.";
+                return RedirectToAction("InsertBlogDetail", "Blog");
+            }
 
             HttpContext.Session.SetInt32("blogid" , blogid);
 
@@ -104,7 +109,13 @@ namespace MedAdvice.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> InsertBlogImageConfirm(BlogImageViewModel model)
         {
-            int blogid = HttpContext.Session.GetInt32("blogid").Value;
+            int? sessionBlogId = HttpContext.Session.GetInt32("blogid");
+            if (sessionBlogId == null)
+            {
+                TempData["msg"] = "نشست شما منقضی شده است. لطفا دوباره تلاش کنید.";
+                return RedirectToAction("InsertBlogDetail", "Blog");
+            }
+            int blogid = sessionBlogId.Value;
             ImageReadResult imageResult = await ImageUpload.ReadAsync(model.Blogimg);
             if (imageResult.Ok == false)
             {

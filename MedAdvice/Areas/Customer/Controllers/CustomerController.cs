@@ -34,6 +34,10 @@ namespace MedAdvice.Areas.Customer.Controllers
         public async Task<IActionResult> ProductDetails(int id)
         {
             Product product = await db.Products.Include(x => x.productImages).Include(z=>z.productcategory).Include(m=>m.Brand).FirstOrDefaultAsync(y => y.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
             
             var productcategorieslevelone = await db.ProductCategories.Where(x => x.ParentId == null).ToListAsync();
             var lastfourblogs = await db.Blogs
@@ -69,7 +73,12 @@ namespace MedAdvice.Areas.Customer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddtoPurchaseCart(int productid)
         {
-            string userid = (await userManager.FindByNameAsync(User.Identity.Name)).Id;
+            ApplicationUser currentUser = await userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return Json(false);
+            }
+            string userid = currentUser.Id;
             Purchasecart purchasecart = await db.Purchasecarts.FirstOrDefaultAsync(x => x.UserId == userid && x.isOpen == true);
             if (purchasecart == null)
             {
@@ -100,14 +109,25 @@ namespace MedAdvice.Areas.Customer.Controllers
         {
 
 
-            string userid = (await userManager.FindByNameAsync(User.Identity.Name)).Id;
+            ApplicationUser currentUser = await userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("signinsignup", "account", new { area = "" });
+            }
+            string userid = currentUser.Id;
             Purchasecart purchaseCart = await db.Purchasecarts.Include(x => x.PurchaseCartItems).ThenInclude(x => x.Product)
                  .ThenInclude(x => x.productImages)
                  .FirstOrDefaultAsync(x => x.UserId == userid && x.isOpen == true);
+
+            // A signed-in user with nothing in the basket has no open cart row.
+            // Render an empty basket rather than failing.
+            if (purchaseCart == null)
+            {
+                ViewData["totalprice"] = "0";
+                return View(new Purchasecart { PurchaseCartItems = new List<PurchaseCartItem>() });
+            }
+
             ViewData["totalprice"] = $"{await PurchaseCartTotalPrice(purchaseCart.Id):0,0}";
-
-            HttpContext.Session.SetInt32("purchaseCartId", purchaseCart.Id);
-
             return View(purchaseCart);
         }
         [NonAction]

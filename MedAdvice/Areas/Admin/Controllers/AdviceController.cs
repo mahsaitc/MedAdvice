@@ -102,6 +102,11 @@ namespace MedAdvice.Areas.Admin.Controllers
         public async Task<IActionResult> InsertAdviceImage(int AdviceId)
         {
             Advice advice = await db.FindAsync<Advice>(AdviceId);
+            if (advice == null)
+            {
+                TempData["msg"] = "رکورد مورد نظر پیدا نشد.";
+                return RedirectToAction("InsertAdvice", "Advice");
+            }
             ViewData["Advice"] = advice;
 
             HttpContext.Session.SetInt32("AdviceId", AdviceId);
@@ -111,7 +116,13 @@ namespace MedAdvice.Areas.Admin.Controllers
       [ValidateAntiForgeryToken]
       public async Task<IActionResult> InsertAdviceImageConfirm(AdviceImageViewModel model)
         {
-            int AdviceId = HttpContext.Session.GetInt32("AdviceId").Value;
+            int? sessionAdviceId = HttpContext.Session.GetInt32("AdviceId");
+            if (sessionAdviceId == null)
+            {
+                TempData["msg"] = "نشست شما منقضی شده است. لطفا دوباره تلاش کنید.";
+                return RedirectToAction("InsertAdvice", "Advice");
+            }
+            int AdviceId = sessionAdviceId.Value;
             ImageReadResult imageResult = await ImageUpload.ReadAsync(model.AdviceImage);
             if (imageResult.Ok == false)
             {
