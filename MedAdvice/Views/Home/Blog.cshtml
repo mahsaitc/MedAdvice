@@ -1,0 +1,67 @@
+﻿@model List<Blog>
+<div class="page-banner-area bg-2">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <div class="page-content">
+                    <h2>Blog</h2>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li>Blog</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="blog-area blog-area-two ptb-100">
+    <div class="container">
+        <div class="row">
+            @foreach (var items in Model)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="blog-card">
+                        <a asp-area="home" asp-controller="home" asp-action="BlogDetails" asp-route-id="@items.Id">
+                           
+                                <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(items.BlogHeaderImage)}")>
+                            </a>
+                            <div class="b-card-text">
+                                <span>@items.BlogDate <a asp-controller="home" asp-action="BlogDetails" asp-route-id="@items.Id"></a></span>
+                                <span class="t-right"><i class="bx bx-user"></i> 190K</span>
+                                <h3><a asp-controller="home" asp-action="BlogDetails" asp-route-id="@items.Id">@items.BlogTitle</a></h3>
+                                <small>@items.BlogCategory.BlogCategoryname</small>
+                                <h3><a asp-controller="home" asp-action="BlogDetails" asp-route-id="@items.Id">@items.BlogBriefText</a></h3>
+                                <div class="view-more">
+                                    <a asp-controller="home" asp-action="BlogDetails" asp-route-id="@items.Id">
+                                        Read more
+                                        <span></span>
+                                    </a>
+                                </div>
+                            </div>
+</div>
+                </div>
+
+            }
+           
+            <div class="col-lg-12 col-md-12">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="/home/BlogDetails" aria-label="Previous">
+                            <span aria-hidden="true">«</span>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="/home/BlogDetails">1</a></li>
+                    <li class="page-item"><a class="page-link" href="/home/BlogDetails">2</a></li>
+                    <li class="page-item"><a class="page-link" href="/home/BlogDetails">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="/home/BlogDetails" aria-label="Next">
+                            <span aria-hidden="true">»</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+

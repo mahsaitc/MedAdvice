@@ -1,0 +1,274 @@
+﻿@{
+    ViewData["Title"] = "ProductDetails";
+    Layout = "~/Views/shared/_Layout.cshtml";
+    var lastfourblogs = ViewData["lastfourblogs"] as List<Blog>;
+    var productcategorieslevelone = ViewData["productcategorieslevelone"] as List<ProductCategory>;
+}
+@model Product
+<div class="page-banner-area bg-5">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <div class="page-content">
+                    <h2>Product Details</h2>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li>Product Details</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="services-dateils-area ptb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="services-details">
+                    <div class="header-img">
+                        <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(Model.productImages[0].img)}") alt="Image">
+                    </div>
+                    <div class="details-text">
+                        <h3>Description:</h3>
+                        <h2>@Model.englishname  @Model.productmodel</h2>
+                        <p>@Model.descreption</p>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="widget-area">
+                    <div class="widget widget_search">
+                        <h3 class="widget-title">Search</h3>
+                        <form class="search-form"  asp-controller="customer" asp-action="SearchProduct">
+                            <input type="search" name="sname" class="search-field" placeholder="Search product..." >
+                            <button type="submit"><i class="bx bx-search"></i></button>
+                        </form>
+                    </div>
+                    <div class="widget widget_categories">
+                        <h3 class="widget-title">Product Categories</h3>
+                        <ul class="bg-f6f4ff">
+                            @foreach (var item in productcategorieslevelone)
+
+                            {
+
+                                <li value="@item.Id" id="listprcategoryfirst">
+                                    <i class="bx bx-chevrons-right"></i>
+
+                                    @item.CategoryName
+                                </li>
+
+
+                            }
+
+
+                        </ul>
+                    </div>
+                    <div class="widget widget_categories">
+                        <h3 class="widget-title">Product Group</h3>
+                        <ul class="bg-f6f4ff">
+
+
+                            <li id="listprcategorysecond">
+                                <i class="bx bx-chevrons-right"></i>
+
+                            </li>
+
+
+
+                        </ul>
+                    </div>
+
+                    <div class="widget widget_posts_thumb">
+                        <h3 class="widget-title">Latest news</h3>
+                        @foreach (var item in lastfourblogs)
+                        {
+                            <div class="item">
+                                <a asp-controller="home" asp-action="BlogDetails" asp-route-id="@item.Id">
+                                    <span class="fullimage cover bg1" role="img"></span>
+                                </a>
+                                <div class="info">
+                                    <h4 class="title"><a  asp-action="BlogDetails" asp-route-id="@item.Id">@item.BlogTitle</a></h4>
+                                    <span>@item.BlogDate</span>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        }
+
+
+                    </div>
+
+                </div>
+            </div>
+            <section class="cart-area ptb-120">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+
+                            <div class="cart-table table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Product Name</th>
+                                            <th scope="col">Model</th>
+                                            <th scope="col">Price</th>
+                                            <th scope="col">Color</th>
+                                            <th scope="col">Weight</th>
+                                            <th scope="col">Size</th>
+                                            <th scope="col">Count</th>
+                                            <th scope="col">Brand</th>
+                                            <th scope="col">Category</th>
+                                            <th scope="col">Date</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td class="product-thumbnail">
+                                                <span>@Model.englishname</span>
+                                            </td>
+
+                                            <td class="product-name">
+                                                <span>@Model.productmodel</span>
+                                            </td>
+
+                                            <td class="product-price">
+                                                <span>@Model.price</span>
+                                            </td>
+
+                                            <td class="product-quantity">
+                                                <span>@Model.color</span>
+                                            </td>
+
+                                            <td class="product-subtotal">
+                                                <span>@Model.weight</span>
+                                            </td>
+
+                                            <td class="product-remove">
+
+                                                <span>@Model.size</span>
+                                            </td>
+                                            <td class="product-remove">
+
+                                                <span>@Model.count</span>
+                                            </td>
+                                            <td class="product-remove">
+
+                                                <span>@Model.Brand.name</span>
+                                            </td>
+                                            <td class="product-remove">
+
+                                                <span>@Model.productcategory.CategoryName</span>
+                                            </td>
+                                            <td class="product-remove">
+
+                                                <span>@Model.Date</span>
+                                            </td>
+                                        </tr>
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="cart-buttons">
+                                <div class="row h-100 justify-content-center align-items-center">
+                                    <div class="col-lg-7 col-md-7">
+                                        <div class="coupon-box">
+                                          
+                                            <button type="button" class="btn btn-primary" id="btnaddToCart"  productid="@Model.Id">Add to cart</button>
+                                        </div>
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div id="gallery" class="gallery-area pt-100 pb-70">
+                <div class="container">
+                    <div class="section-title-one">
+                        
+                            <h2>product pictures</h2>
+                    </div>
+
+                    <div class="row" id="Container">
+                        @foreach (var item in Model.productImages)
+                        {
+                            <div class="col-lg-4 col-sm-6 mix cardiologist surgery" style="display: inline-block;" data-bound="">
+                                <div class="single-gallery">
+                                    <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(item.img)}")>
+                                    <div>
+                                        <small>@item.title</small>
+                                    </div>
+                                    <div class="caption">
+                                        <div class="d-table">
+                                            <div class="d-table-cell">
+                                                <a href="#">
+                                                    <i class="bx bx-right-top-arrow-circle"></i>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@Html.AntiForgeryToken()
+<script>
+    function antiForgeryToken() {
+        return document.querySelector('input[name="__RequestVerificationToken"]').value
+    }
+</script>
+<script>
+    $(() => {
+        $(btnaddToCart).click(function (event) {
+            event.preventDefault()
+            let productid = $(this).attr('productid')
+
+            $.post('/customer/customer/AddtoPurchaseCart',
+                { productid: productid, __RequestVerificationToken: antiForgeryToken() }, x => {
+                if (x === true) alert('product is added to your purchasecart.')
+            })
+        })
+
+    })
+    $(() => {
+        $(listprcategoryfirst).click(function (event) {
+            let catrgoryIdFirst = $(event.target).val()
+
+            $.get('/customer/customer/productCategoriesLevelTwo/', { id: catrgoryIdFirst }, value => {
+                $(listprcategorysecond).html('')
+                /*alert(JSON.stringify(value))*/
+                $(value).each((index, x) => {
+
+                    $(listprcategorysecond).append(`<li  value='${x.id}'><a asp-action='showadvices' asp-controller='home' asp-rote-id='${x.id}'>${x.categoryName}</a></li>`)
+
+                })
+
+
+            })
+
+        })
+    })
+
+</script>
+

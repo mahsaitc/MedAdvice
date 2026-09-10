@@ -1,0 +1,158 @@
+﻿
+
+
+
+
+@model BlogViewModel
+@{
+    var BlogCategories = ViewData["BlogCategories"] as List<BlogCategory>;
+   
+}
+
+<h1>InsertBlogDetail</h1>
+
+<style>
+    form {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+<div class="container">
+    <form asp-area="Admin" asp-controller="Blog" asp-action="InsertBlogConfirm" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <label> عنوان بلاگ</label>
+                <input class="form-control" asp-for="BlogTitle" />
+                <span asp-validation-for="BlogTitle"></span>
+            </div>
+            <div class="col-md-6">
+                <label>تاریخ بلاک</label>
+                <input type="text" class="form-control ltr" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask="yyyy/mm/dd" asp-for="BlogDate">
+                <span asp-validation-for="BlogDate"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label> گروه بندی بلاگ</label>
+                <select class="form-control" id="ddlBlogcategoriesFirst">
+                    <option></option>
+                    @foreach (var item in BlogCategories)
+                    {
+                        <option value="@item.Id">@item.BlogCategoryname</option>
+                    }
+                </select>
+                <label>دسته بندی بلاگ</label>
+                <select class="form-control" id="ddlBlogCategoriesSecond" asp-for="BlogCategoryId">
+                </select>
+
+            </div>
+            <div class="col-md-6">
+
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <label> خلاصه متن</label>
+            <textarea asp-for="BlogBriefText" class="form-control" rows="3" style="direction:ltr"></textarea>
+            <span asp-validation-for="BlogBriefText"></span>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-info card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+
+                            <small>متن اصلی بلاگ</small>
+                        </h3>
+                        <!-- tools box -->
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool btn-sm" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+
+                        </div>
+                        <!-- /. tools -->
+                    </div>
+                    <!-- /.card-header -->
+                    <div>
+
+                        <textarea id="txt1" asp-for="BlogText"></textarea>
+                        <script>
+                            CKEDITOR.replace('txt1', {
+                            })
+                        </script>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div>
+
+        </div>
+        <div class="input-group">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" asp-for="BlogHeaderImage" id="headerfile">
+                <label class="custom-file-label" for="exampleInputFile">انتخاب فایل تصویر</label>
+            </div>
+            <div class="input-group-append">
+                <span class="input-group-text" id="">Upload</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div id="divimages">
+                        <img id="headerimgpreview" width="400" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <button class="btn btn-success">ثبت</button>
+    </form>
+
+</div>
+
+
+
+<script>
+    $(() => {
+
+        $(ddlBlogcategoriesFirst).change(function (event) {
+            let BlogCategoryIdFirst = $(event.target).val()
+            $.get('/admin/Blog/GetBlogCategories', { BlogId: BlogCategoryIdFirst }, value => {
+                alert(JSON.stringify(value))
+                $(ddlBlogCategoriesSecond).html('<option></option>')
+
+                for (let x of value) {
+
+                    $(ddlBlogCategoriesSecond).append(`<option value='${x.id}'>${x.blogCategoryname}</option>`)
+                }
+            })
+        })
+
+
+        $(headerfile).change(function (event) {
+            var reader = new FileReader()
+            reader.readAsDataURL(event.target.files[0])
+            reader.onloadend = x => {
+                $(headerimgpreview).attr('src', x.target.result)
+            }
+        })
+    })
+</script>
+
+
+
+
+

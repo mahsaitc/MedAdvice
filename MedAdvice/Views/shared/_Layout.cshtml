@@ -1,0 +1,617 @@
+﻿
+<!doctype html>
+<html lang="zxx">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="/layout/css/bootstrap.min.css">
+
+    <link href="/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/layout/css/boxicons.min.css">
+
+    <link rel="stylesheet" href="/layout/css/meanmenu.min.css">
+
+    <link rel="stylesheet" href="/layout/css/nice-select.css">
+
+    <link rel="stylesheet" href="/layout/css/animate.min.css">
+
+    <link rel="stylesheet" href="/layout/css/owl.carousel.min.css">
+
+    <link rel="stylesheet" href="/layout/css/owl.theme.default.min.css">
+
+    <link rel="stylesheet" href="/layout/css/magnific-popup.min.css">
+
+    <link rel="stylesheet" href="/layout/css/jquery.datetimepicker.min.css" />
+
+    <link rel="stylesheet" href="/layout/css/style.css">
+
+    <link rel="stylesheet" href="/layout/css/responsive.css">
+   
+    <link href="~/layout/js/icofont.min.css" rel="stylesheet" />
+
+    <link href="~/css/validation.css" rel="stylesheet" />
+
+
+    <link rel="icon" type="image/png" href="/layout/img/favicon.png">
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+
+    <script src="/layout/js/jquery.min.js"></script>
+
+    <script src="~/layout/js/popper.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+
+
+    <script src="/layout/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/layout/js/jquery.magnific-popup.min.js"></script>
+
+    <script src="/layout/js/meanmenu.min.js"></script>
+
+    <script src="/layout/js/jquery.nice-select.min.js"></script>
+
+    <script src="/layout/js/owl.carousel.min.js"></script>
+
+    <script src="/layout/js/jquery.mixitup.min.js"></script>
+
+    <script src="/layout/js/jquery.datetimepicker.full.min.js"></script>
+
+    <script src="/layout/js/form-validator.min.js"></script>
+
+    <script src="/layout/js/contact-form-script.js"></script>
+
+    <script src="/layout/js/jquery.ajaxchimp.min.js"></script>
+
+    <script src="/layout/js/custom.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <title>Covax - Medical Healthcare & Doctor HTML Template</title>
+
+    <style>
+        .modal, #modalshowmessage {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            bottom: 0;
+            left: 0;
+            overflow: auto;
+            overflow-y: auto;
+            z-index: 100000
+        }
+    </style>
+</head>
+<body>
+
+    @inject UserManager<ApplicationUser> usermanager
+
+    <div id="divtimer" style="color:red"></div>
+    @{
+        string lockedoutdate = ViewContext.HttpContext.Session.GetString("lockedoutdate");
+    }
+    @if (lockedoutdate != null) //TempData["islockedout"] != null && (bool)TempData["islockedout"] == true)
+    {
+        DateTime _lockedoutdate = DateTime.Parse(lockedoutdate);
+
+        int seconds = (int)DateTime.Now.Subtract(_lockedoutdate).TotalSeconds;
+        if (seconds < 80)
+        {
+            <script>
+                $(() => {
+                    let counter = 80 - @seconds ;
+                    let timer1 = setInterval(() => {
+                        if (counter == -1) {
+                            clearInterval(timer1)
+                            $(divtimer).html('')
+                        } else
+                            $(divtimer).html(` time of your account inactivity is: ${counter--}`)
+                    }, 1000)
+                })
+            </script>
+        }
+        else
+        {
+            ViewContext.HttpContext.Session.Remove("lockedoutdate");
+        }
+    }
+
+    <div class="preloader">
+        <div class="container">
+            <div class="d-table">
+                <div class="d-table-cell">
+                    <div class="preloader loading">
+                        <span class="slice"></span>
+                        <span class="slice"></span>
+                        <span class="slice"></span>
+                        <span class="slice"></span>
+                        <span class="slice"></span>
+                        <span class="slice"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div>*@
+    <div class="top-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <ul class="flag-area">
+                            <li class="flag-item-top">
+                                <a href="#" class="flag-bar">
+                                    <i class='bx bxs-user'></i>
+                                    <span>User Area</span>
+                                    <i class="bx bx-chevron-down"></i>
+                                </a>
+                                <ul class="flag-item-bottom">
+                                    <li class="flag-item">
+                                        <a href="#" class="flag-link">
+                                            <img src="/layout/img/user.png" alt="Image">
+                                            @if (User.Identity.IsAuthenticated == true)
+                                            {
+                                                ApplicationUser user = await usermanager.FindByNameAsync(User.Identity.Name);
+                                                @($"{user.firstname} {user.lastname}")
+                                            }
+                                            else
+                                            {
+
+                                                @("Guest User")
+
+
+                                            }
+                                        </a>
+                                    </li>
+
+                                    <li class="flag-item">
+                                        @if (User.Identity.IsAuthenticated == false)
+                                        {
+                                            <a asp-action="signinsignup" asp-controller="Account" class="flag-link">
+                                                <img src="/layout/img/sign-in-alt.png" alt="Image">
+
+                                                Signin/SignUp
+                                            </a>
+                                        }
+                                        else
+                                        {
+
+                                        <li>
+                                            <i class='bx bx-log-out'></i>
+                                            <form asp-action="signout" asp-controller="account" method="post"
+                                                  id="signoutForm" style="display:none"></form>
+                                            <a href="#"
+                                               onclick="document.getElementById('signoutForm').submit(); return false;">
+                                                Signout
+                                            </a>
+                                        </li>
+                                       
+                                        <li>
+                                            <i class='bx bx-shopping-bag'></i>
+                                            <a asp-action="PurchaseCartManagement" asp-controller="customer" asp-area="customer">
+                                                Shopping Cart
+                                            </a>
+                                        </li>
+
+                                    }
+                                    </li>
+                                    
+                                 </ul>
+                           
+                       
+                    </div>
+                    <div class="col-md-9">
+                        <ul class="contact-area">
+                            <li>
+                                <i class="bx bx-phone-call"></i>
+                                Phone
+                                <br>
+                                <a href="tel:+267-784-4336">(647)735-5122</a>
+                            </li>
+                            <li>
+                                <i class="bx bx-time-five"></i>
+                                Time
+                                <br>
+                                <span>Mon - Fri: 8 AM - 9 PM</span>
+                            </li>
+                            <li>
+                                <i class="bx bxs-map"></i>
+                                Location
+                                <br>
+                                <span>200 radpath avenue toronto,ontario M4P 0E6</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*</div>*@
+    <header class="header-area">
+
+            <div class="navbar-area">
+                <div class="main-responsive-nav">
+                    <div class="container">
+                        <div class="main-responsive-menu">
+                            <div class="medadvice logo">
+                                <a href="index.html">
+                                    <img src="/layout/img/meadvise logo.png" alt="image">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="main-navbar">
+                    <div class="container">
+                        <nav class="navbar navbar-expand-md navbar-light">
+                            <a class="navbar-brand" href="index.html">
+                                <img src="/layout/img/meadvise logo.png" alt="image">
+                            </a>
+                            <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
+                                <ul class="navbar-nav ms-auto">
+                                    <li class="nav-item">
+                                        <a href="/home/home" class="nav-link active">
+                                            Home
+
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/home/AboutUs" class="nav-link active">
+                                            About Us
+
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link">
+                                            Pages
+                                            <i class='bx bx-chevron-down'></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+
+                                            <li class="nav-item">
+                                                <a href="/home/team" class="nav-link">
+                                                    Team
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/home/FAQ" class="nav-link">
+                                                    FAQ
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/home/gallery" class="nav-link">
+                                                    Gallery
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/home/Testimonials" class="nav-link">
+                                                    Testimonials
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                    <a href="/home/TermsCondition" class="nav-link">
+                                                        User
+                                                        <i class='bx bx-chevron-down'></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu">
+                                                        <li class="nav-item">
+                                                            <a href="sign-in.html" class="nav-link">
+                                                                Sign In
+                                                            </a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a href="sign-up.html" class="nav-link">
+                                                                Sign Up
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            <li class="nav-item">
+                                                <a href="/home/TermsCondition" class="nav-link">
+                                                    Terms & Conditions
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/home/PrivacyPolicy" class="nav-link">
+                                                    Privacy Policy
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                    <a href="error-404.html" class="nav-link">
+                                                        Error Page
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="contact.html" class="nav-link">
+                                                        Contact
+                                                    </a>
+                                                </li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/home/MedicalAdvices" class="nav-link">
+                                            Medical Advices
+                                            <i class='bx bx-chevron-down'></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                                <li class="nav-item">
+                                                    <a href="/home/MedicalAdvices" class="nav-link">
+                                                        Medical Advices
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="/home/ShowAdviceCategoriesLevelOne" class="nav-link">
+                                                        Medical Advice categories
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/home/doctors" class="nav-link">
+                                            Our doctors
+                                            <i class='bx bx-chevron-down'></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                                <li class="nav-item">
+                                                    <a href="/home/doctors" class="nav-link">
+                                                        Doctors
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a asp-controller="home" asp-action="ViewDrGroups" class="nav-link">
+                                                        Doctors Spacialities
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a asp-area="customer" asp-controller="customer"
+                                           asp-action="index" class="nav-link">
+                                            Our products
+                                            <i class='bx bx-chevron-down'></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                                <li class="nav-item">
+                                                    <a asp-area="customer" asp-controller="customer"
+                                                       asp-action="index" class="nav-link">
+                                                        products
+                                                    </a>
+                                                </li>
+                                                @*<li class="nav-item">
+                                                    <a asp-area="customer" asp-controller="customer"
+                                                       asp-action="ProductCategoryone" class="nav-link">
+                                                        products by Category
+                                                    </a>
+                                                </li>*@
+                                            </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/home/blog" class="nav-link">
+                                            Blog
+                                            <i class='bx bx-chevron-down'></i>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                                <li class="nav-item">
+                                                    <a asp-controller="home" asp-action="blog" class="nav-link">
+                                                        Blog
+                                                    </a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a asp-controller="home" asp-action="BlogCategories" class="nav-link">
+                                                        Blog Categories
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/account/signinsignup" class="nav-link">
+                                            Userpage
+                                        </a>
+                                    </li>
+                                    <li class="nav-btn">
+                                        <a href="/home/contact" class="default-btn">
+                                            Contacts Us
+                                            <span></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+        </header>
+
+
+
+        <div class="mainpage-area ">
+
+            @*<h1> @TempData["pagename"] </h1>*@
+
+            @RenderBody()
+
+        </div>
+
+        <footer class="footer-area bg-color pt-100 pb-70">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="footer-widget">
+                            <h2>Find us</h2>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</p>
+                            <ul class="contact">
+                                <li>
+                                    <i class='bx bx-location-plus'></i>
+                                    5021 Franklee Lane, USA
+                                </li>
+                                <li>
+                                    <a href="tel:+267-784-4336">
+                                        <i class='bx bx-phone-call'></i>
+                                        +267-784-4336
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="mailto: info@covax.com"> <i class='bx bx-message-dots'></i> info@covax.com</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="footer-widget pl-50">
+                            <h2>Recent Four Blogs</h2>
+                            <ul class="widget-list">
+                                <li>
+                                    <a href="#">
+                                        General information
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Emergency service
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Ambulance
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Medical research
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Blood bank service
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Intensive care unit
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="footer-widget">
+                            <h2>Join our community</h2>
+                            <ul class="widget-list">
+                                <li>
+                                    <a href="#">
+                                        Posted on to our blogs
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Join our forum
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Meet up with our doctors
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Medical research
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Help center
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Contract with us
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="footer-widget pl-50">
+                            <h2>Open time</h2>
+                            <ul class="widget-time">
+                                <li>Mon-Fri 8:00 AM - 10:00 PM</li>
+                                <li>Sat-Sun 9:00 AM - 6:00 PM</li>
+                                <li>Emergency service 24 hours</li>
+                            </ul>
+                            <ul class="social-link">
+                                <li>
+                                    <a href="#" target="_blank">
+                                        <i class='bx bxl-facebook bg-1'></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" target="_blank">
+                                        <i class='bx bxl-twitter bg-2'></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" target="_blank">
+                                        <i class='bx bxl-linkedin bg-3'></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" target="_blank">
+                                        <i class='bx bxl-instagram bg-4'></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+        <div class="footer-bottom-area">
+            <div class="container">
+                <p>Copyright Covax. All rights reserved <a href="https://hibootstrap.com/" target="_blank">HiBootstrap</a></p>
+            </div>
+        </div>
+
+
+        <div class="go-top">
+            <i class='bx bxs-upvote'></i>
+        </div>
+        <div>
+            @if (TempData["msg"] != null)
+            {
+                <div class="modal fade" id="modalshowmessage">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color:lightblue">
+                                <h3>systemic messages</h3>
+                            </div>
+                            <div class="modal-body">
+                                <h3>@TempData["msg"] </h3>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" data-dismiss="modal">return</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    //$(modalshowmessage).css("margin-right", $(window).width() - 500);
+                    $(modalshowmessage).css("margin-left", $(window).width() - $(modalshowmessage).width());
+                    $(modalshowmessage).modal()
+                    $(() => {
+                        setTimeout(() => {
+                            $(modalshowmessage).modal('hide')
+                        }, 4000)
+                    })
+                </script>
+            }
+        </div>
+    </body>
+</html>

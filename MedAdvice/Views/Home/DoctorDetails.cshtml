@@ -1,0 +1,284 @@
+﻿@{ 
+    Doctor doctor = ViewData["doctor"] as Doctor;
+    var lastfourblogs = ViewData["lastfourblogs"] as List<Blog>;
+}
+@model List<DoctorSpaciality>
+<div class="page-banner-area bg-5">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <div class="page-content">
+                    <h2>Doctors Details</h2>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li>Doctors Details</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="services-dateils-area ptb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="services-details">
+                    <div class="header-img">
+                        <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(doctor.DrProfileImage)}") alt="Image">
+                    </div>
+                    <div class="details-text">
+                        <h2>@doctor.FirstName  @doctor.FamillyName</h2>
+                        
+                        <p>@Html.Raw(HtmlContentSanitizer.Sanitize(doctor.DrDetails))</p>
+
+                    </div>
+
+                   
+                   
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="widget-area">
+                    <div class="widget widget_search">
+                        <h3 class="widget-title">Search</h3>
+                        <form asp-controller="home" asp-action="SearchDoctor" class="search-form">
+                            <input type="search" name="sname" class="search-field" placeholder="Search doctor...">
+                            <button type="submit"><i class="bx bx-search"></i></button>
+                        </form>
+                    </div>
+                    <div class="widget widget_categories">
+                        <h3 class="widget-title">Doctor Categories</h3>
+                        <ul class="bg-f6f4ff">
+                            @foreach (var item in Model)
+
+                            {
+
+                                <li value="@item.Id" id="listDrcategoryfirst">
+                                    <i class="bx bx-chevrons-right"></i>
+
+                                    @item.SpacialityTitle
+                                </li>
+
+
+                            }
+
+
+                        </ul>
+                    </div>
+                    <div class="widget widget_categories">
+                        <h3 class="widget-title">Doctor Spaciality</h3>
+                        <ul class="bg-f6f4ff">
+
+
+                            <li id="listDrcategorysecond">
+                                <i class="bx bx-chevrons-right"></i>
+
+                            </li>
+
+
+
+                        </ul>
+                    </div>
+
+
+                    <div class="widget widget_posts_thumb">
+                        <h3 class="widget-title">Latest news</h3>
+                        @foreach (var item in lastfourblogs)
+                        {
+                            <div class="item">
+                                <a asp-controller="home" asp-action="BlogDetails" asp-route-id="@item.Id">
+                                    <span class="fullimage cover bg1" role="img"></span>
+                                </a>
+                                <div class="info">
+                                    <h4 class="title"><a asp-controller="home" asp-action="BlogDetails" asp-route-id="@item.Id">@item.BlogTitle</a></h4>
+                                    <span>@item.BlogDate</span>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        }
+
+
+                    </div>
+
+                    <div class="contact-info">
+                        <div class="section-title-two">
+                            <h2>Contact Info</h2>
+                        </div>
+                        <ul>
+                            <li>
+                                <i class="bx bx-phone-call"></i>
+
+                                <a href="tel:+0123456987">@doctor.PhoneNumber</a>
+                            </li>
+                            <li>
+                                <i class="bx bx-phone-call "></i>
+                                <a href="tel:2677844336">@doctor.Mobilenumber</a>
+
+                            </li>
+                            <li>
+                                <i class="bx bx-envelope"></i>
+                                <a href="mailto: info@covax.com"> @doctor.EmailAdress</a>
+                                <br>
+
+                            </li>
+                            <li>
+                                <i class="bx bx-map"></i>
+                                @doctor.DrServiceLocation
+                            </li>
+                            <li>
+                                <i class="bx bxl-facebook"></i>
+
+                                <a href="mailto: info@covax.com"> @doctor.FacebookId</a>
+                            </li>
+                            <li>
+                                <i class="bx bxl-twitter"></i>
+
+                                <a href="mailto: info@covax.com"> @doctor.TwitterId</a>
+                            </li>
+                            <li>
+                                <i class="bx bxl-instagram"></i>
+
+                                <a href="mailto: info@covax.com"> @doctor.InstagramId</a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            </div>
+            <section class="cart-area ptb-120">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12">
+
+                            <div class="cart-table table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Family</th>
+                                            <th scope="col">MedicalCouncilNo</th>
+                                            <th scope="col">DrBirthDate</th>
+                                            <th scope="col">DrServiceLocation</th>
+                                            <th scope="col">CollaborationDate</th>
+                                            <th scope="col">DrServiceLocation</th>
+                                            <th scope="col">NationalCode</th>
+                                            <th scope="col">DrSpaciality</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td class="product-thumbnail">
+                                                <span>@doctor.FirstName</span>
+                                            </td>
+
+                                            <td class="product-name">
+                                                <span>@doctor.FamillyName</span>
+                                            </td>
+
+                                            <td class="product-price">
+                                                <span>@doctor.MedicalCouncilNo</span>
+                                            </td>
+
+                                            <td class="product-quantity">
+                                                <span>@doctor.DrBirthDate</span>
+                                            </td>
+
+                                            <td class="product-subtotal">
+                                                <span>@doctor.DrServiceLocation</span>
+                                            </td>
+
+                                            <td class="product-remove">
+
+                                                <span>@doctor.CollaborationDate</span>
+                                            </td>
+                                            <td class="product-remove">
+
+                                                <span>@doctor.DrServiceLocation</span>
+                                            </td>
+                                            <td class="product-remove">
+
+                                                <span>@doctor.NationalCode</span>
+                                            </td>
+                                            <td class="product-remove">
+
+                                                <span>@doctor.DrSpaciality.SpacialityTitle</span>
+                                            </td>
+                                        </tr>
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div id="gallery" class="gallery-area pt-100 pb-70">
+                <div class="container">
+                    <div class="section-title-one">
+                        @*<span>Our gallery</span>
+                    <h2>Let's check out our gallery and treatment process</h2>*@
+                    </div>
+
+                    <div class="row" id="Container">
+                        @foreach (var item in doctor.DrImages)
+                        {
+                            <div class="col-lg-4 col-sm-6 mix cardiologist surgery" style="display: inline-block;" data-bound="">
+                                <div class="single-gallery">
+                                    <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(item.Doctorimg)}")>
+                                    <div>
+                                        <small>@item.DoctorImageTitle</small>
+                                    </div>
+                                    <div class="caption">
+                                        <div class="d-table">
+                                            <div class="d-table-cell">
+                                                <a href="#">
+                                                    <i class="bx bx-right-top-arrow-circle"></i>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+   
+    $(() => {
+        $(listDrcategoryfirst).click(function (event) {
+            let catrgoryIdFirst = $(event.target).val()
+
+            $.get('/home/GetDrSpaciality/', { id: catrgoryIdFirst }, value => {
+                $(listDrcategorysecond).html('')
+                alert(JSON.stringify(value))
+                $(value).each((index, x) => {
+
+                    $(listDrcategorysecond).append(`<li  value='${x.id}'><a asp-action='showadvices' asp-controller='home' asp-rote-id='${x.id}'>${x.spacialityTitle}</a></li>`)
+
+                })
+
+
+            })
+
+        })
+    })
+
+</script>
+

@@ -1,0 +1,100 @@
+﻿
+
+
+
+
+
+@{
+    Doctor doctor = ViewData["doctor"] as Doctor;
+}
+@model DrImageViewModel
+    <h1>InsertDrImage</h1>
+
+    <style>
+        form {
+            padding: 20px;
+        }
+
+        label {
+            color: green
+        }
+    </style>
+    <div class="container">
+        <form asp-area="admin" asp-controller="Doctor" asp-action="InsertDoctortImageConfirm"
+              method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6">
+                    <label> نام</label>
+                    <input class="form-control" value="@doctor.FirstName" />
+
+                </div>
+                <div class="col-md-6">
+                    <label>نام خانوادگی</label>
+                    <input class="form-control" value="@doctor.FamillyName" />
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="exampleInputFile">تصویر </label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input id="file1" type="file" multiple class="custom-file-input" asp-for="Doctorimg">
+                                <label class="custom-file-label" for="exampleInputFile">انتخاب فایل</label>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label> عنوان فایل عکس</label>
+                    <input class="form-control" asp-for="DoctorImageTitle" />
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div id="divimages">
+                            <img id="imgpreview" width="100" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <button class="btn btn-success">ثبت تصویر </button>
+            <button class="btn btn-success">
+                <a asp-area="Admin" asp-action="InsertDoctorProfile" asp-controller="doctor" class="text-white">ورود اطلاعات  جدید</a>
+            </button>
+        </form>
+
+
+    </div>
+    <script>
+        $(() => {
+            $(file1).change(function (event) {
+                $(divimages).html('')//pak mikonad
+                for (var x of event.target.files)//فایلهای عکس انتخاب شده را تک تک بخوان
+                {
+                    //event.target.files[0].size
+                    var parts = x.name.split('.')
+                    if (parts[1].toLowerCase() === "jpg" || parts[1].toLowerCase() === "png" || parts[1].toLowerCase() === "jpeg") {
+                        var reader = new FileReader()
+                        reader.readAsDataURL(x)
+                        reader.onloadend = x => {
+                            $(divimages).append(`<img style="margin:5px" class='rounded-pill' width='100' src='${x.target.result}'/>`)
+                        }
+                    } else {
+                        alert('فرمت فایل تصویر مناسب نمی باشد')
+                    }
+                }
+            })
+        })
+    </script>
+

@@ -1,0 +1,28 @@
+## Normalise line endings in the repository; check out native on each platform.
+* text=auto
+
+## Source files are always text
+*.cs        text diff=csharp
+*.cshtml    text
+*.csproj    text
+*.sln       text eol=crlf
+*.json      text
+*.js        text
+*.css       text
+*.html      text
+*.md        text
+*.sql       text
+
+## Binary assets — never touch
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.psd       binary
+*.woff      binary
+*.woff2     binary
+*.ttf       binary
+*.eot       binary
+*.pdf       binary
+*.dll       binary

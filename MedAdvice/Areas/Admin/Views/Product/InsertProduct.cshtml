@@ -1,0 +1,140 @@
+﻿
+
+@{
+    ViewData["Title"] = "InsertProduct";
+}
+@model ProductViewModel
+@{
+    var brands = ViewData["brands"] as List<Brand>;
+    var productcategories = ViewData["productcategories"] as List<ProductCategory>;
+}
+<h1>ورود کالا</h1>
+<style>
+    form {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+<div class="container">
+    <form asp-area="admin" asp-controller="product" asp-action="InsertProductConfirm" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <label> تاریخ ورود کالا</label>
+                <input class="form-control" asp-for="Date" />
+                <span asp-validation-for="Date"></span>
+            </div>
+            <div class="col-md-6">
+                <label>نام لاتین</label>
+                <input class="form-control" asp-for="englishname" />
+                <span asp-validation-for="englishname"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label> مدل</label>
+                <input class="form-control" asp-for="productmodel" />
+                <span asp-validation-for="productmodel"></span>
+            </div>
+            <div class="col-md-6">
+                <label>رنگ</label>
+                <input class="form-control" asp-for="color" />
+                <span asp-validation-for="color"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label> سایز</label>
+                <input class="form-control" asp-for="size" />
+                <span asp-validation-for="size"></span>
+            </div>
+            <div class="col-md-6">
+                <label>وزن</label>
+                <input class="form-control" asp-for="weight" />
+                <span asp-validation-for="weight"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label> قیمت</label>
+                <input class="form-control" asp-for="price" />
+                <span asp-validation-for="price"></span>
+            </div>
+            <div class="col-md-6">
+                <label>تخفیف</label>
+                <input class="form-control" asp-for="discount" />
+                <span asp-validation-for="discount"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label> تعداد</label>
+                <input class="form-control" asp-for="count" />
+                <span asp-validation-for="count"></span>
+            </div>
+            <div class="col-md-6">
+                <label>برند</label>
+                <select asp-for="BrandId" class="form-control">
+                    <option></option>
+                    @foreach (var item in brands)
+                    {
+                        <option value="@item.Id">@item.name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label>دسته بندی کالاها</label>
+                <select class="form-control" id="ddlCategoriesFirst">
+                    <option></option>
+                    @foreach (var item in productcategories)
+                    {
+                        <option value="@item.Id">@item.CategoryName</option>
+                    }
+                </select>
+                <label>گروه کالاها</label>
+                <select class="form-control" id="ddlCategoriesSecond">
+                </select>
+                <label>نوع کالاها</label>
+                <select class="form-control" id="ddlCategoriesThird" asp-for="ProductCategoryId">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>توضیحات</label>
+            <textarea asp-for="descreption" class="form-control" rows="3"></textarea>
+        </div>
+        <button class="btn btn-success">ثبت</button>
+    </form>
+</div>
+<script>
+    $(() => {
+        $(ddlCategoriesFirst).change(function (event) {
+            let catrgoryIdFirst = $(event.target).val()
+
+            
+            $.get('/admin/product/GetCategories', { categoryId: catrgoryIdFirst }, value => {
+
+               
+                $(ddlCategoriesSecond).html('<option></option>')
+                $(value).each((index, x) => {
+                    $(ddlCategoriesSecond).append(`<option value='${x.id}'>${x.categoryName}</option>`)
+                })
+            })
+        })
+        $(ddlCategoriesSecond).change(function (event) {
+            let catrgoryIdSecond = $(event.target).val()
+            $.get('/admin/product/GetCategories', { categoryId: catrgoryIdSecond }, value => {
+                alert(JSON.stringify(value))
+                $(ddlCategoriesThird).html('<option></option>')
+                $(value).each((index, x) => {
+                    $(ddlCategoriesThird).append(`<option value='${x.id}'>${x.categoryName}</option>`)
+                })
+            })
+        })
+    })
+</script>

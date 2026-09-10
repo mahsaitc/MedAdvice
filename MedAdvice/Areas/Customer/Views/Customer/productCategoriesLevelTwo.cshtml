@@ -1,0 +1,49 @@
+﻿
+
+@model List<ProductCategory>
+<div class="page-banner-area bg-2">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <div class="page-content">
+                    <h2>Product Category Level Two</h2>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li>Categories</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="services-area ptb-100">
+    <div class="container">
+        <div class="section-title-one">
+            <span>Product Category Level Two</span>
+            <h2>Product Category Level Two</h2>
+        </div>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-3 col-sm-6">
+                    <div class="service-card">
+                        
+                        <h3>@item.CategoryName</h3>
+                        <p>@item.CategoryName</p>
+                        <div class="view-more">
+                            <a asp-area="customer" asp-controller="customer" asp-action="Showproducts"  asp-route-id="@item.Id">
+                                View More
+                                <i class="bx bx-right-arrow-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+
+
+        </div>
+    </div>
+</div>
+

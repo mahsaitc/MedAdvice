@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/shared/_Layout.cshtml";
+}
+@model List<Product>
+<div class="page-banner-area bg-5">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <div class="page-content">
+                    <h2>Products</h2>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li>Products</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="products-area bg-f6f4ff ptb-100">
+    <div class="container">
+        <div class="section-title-one">
+            <h2>Let's check-out our special products</h2>
+        </div>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-4 col-sm-6">
+                    <div class="doctors-card">
+                        <a a asp-area="Customer" asp-controller="Customer" asp-action="ProductDetails" asp-route-id=@item.Id>
+                            <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(item.productImages[0].img)}") alt="Image">
+                        </a>
+                        <div class="d-table">
+                            <div class="d-table-cell">
+                                <div class="caption">
+                                    <div class="caption-text">
+                                        <h3 ><a asp-area="Customer" asp-controller="Customer" asp-action="ProductDetails" asp-route-id=@item.Id>@item.englishname</a></h3>
+                                        <small>Insert Date :@item.Date</small>
+                                        <span class="price">@($"{item.price:0,0}") $</span>  
+                                        <div>
+                                            <a  class="btn btn-primary text-white" id="btnaddToCart" productid="@item.Id">Add to Cart</a>
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+           
+
+            <div class="col-lg-12 col-md-12">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">«</span>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">»</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+<script>
+    function antiForgeryToken() {
+        return document.querySelector('input[name="__RequestVerificationToken"]').value
+    }
+</script>
+<script>
+    $(() => {
+        $(btnaddToCart).click(function (event) {
+            event.preventDefault()
+            let productid = $(this).attr('productid')
+            
+            $.post('/customer/customer/AddtoPurchaseCart',
+                { productid: productid, __RequestVerificationToken: antiForgeryToken() }, x => {
+                if (x === true) alert('product is added to your purchasecart.')
+            })
+        })
+
+    })
+</script>

@@ -1,0 +1,64 @@
+## Build output
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.log
+
+## Visual Studio / Rider / VS Code
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.cache
+
+## Publish output
+[Pp]ublish/
+*.[Pp]ublish.xml
+*.pubxml
+*.pubxml.user
+PublishProfiles/
+*.azurePubxml
+
+## Secrets and environment-specific configuration
+## Real values live in User Secrets (dotnet user-secrets) or the host's
+## environment. appsettings.json is committed with EMPTY placeholders only.
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
+appsettings.*.Local.json
+appsettings.Local.json
+secrets.json
+*.pfx
+*.key
+*.pem
+.env
+.env.*
+
+## Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+## Tooling state
+.remember/
+
+## Test output
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+coverage*.json
+coverage*.xml
+
+## OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## Misc
+*.tmp
+*.bak
+*.swp

@@ -1,0 +1,196 @@
+﻿@{
+    Blog blog = ViewData["blog"] as Blog;
+    var lastfourblogs = ViewData["lastfourblogs"] as List<Blog>;
+}
+@model List<BlogCategory>
+<div class="page-banner-area bg-4">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <div class="page-content">
+                    <h2>Blog Details</h2>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li>Blog Details</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="services-dateils-area ptb-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="services-details">
+                    <div class="header-img">
+                        <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(blog.BlogHeaderImage)}") alt="Image">
+                    </div>
+                    <ul>
+                        <li>
+                            <i class="bx bx-calendar"></i>
+                            @blog.BlogDate
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="bx bx-user"></i>
+                                Thomas Albany
+                            </a>
+                        </li>
+                        <li>
+                            <i class="bx bx-show-alt"></i>
+                            45 views
+                        </li>
+                    </ul>
+                    <div class="details-text">
+                        <h3>Description:</h3>
+                        <h2>@blog.BlogCategory.BlogCategoryname</h2>
+                        
+                        <p>@Html.Raw(HtmlContentSanitizer.Sanitize(blog.BlogText))</p>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="widget-area">
+                    <div class="widget widget_search">
+                        <h3 class="widget-title">Search</h3>
+                        <form class="search-form" asp-controller="home" asp-action="SearchBlog">
+                            <input type="search" name="sname" class="search-field" placeholder="Search Blogs...">
+                            <button type="submit"><i class="bx bx-search"></i></button>
+                        </form>
+                    </div>
+                    <div class="widget widget_categories">
+                        <h3 class="widget-title">Blog Categories</h3>
+                        <ul class="bg-f6f4ff">
+                            @foreach (var item in Model)
+
+                            {
+
+                                <li value="@item.Id" id="listblogcategoryfirst">
+                                    <i class="bx bx-chevrons-right"></i>
+
+                                    @item.BlogCategoryname
+                                </li>
+
+
+                            }
+
+
+                        </ul>
+                    </div>
+                    <div class="widget widget_categories">
+                        <h3 class="widget-title">Blog Group</h3>
+                        <ul class="bg-f6f4ff">
+
+
+                            <li id="listblogcategorysecond">
+                                <i class="bx bx-chevrons-right"></i>
+
+                            </li>
+
+
+
+                        </ul>
+                    </div>
+
+                    <div class="widget widget_posts_thumb">
+                        <h3 class="widget-title">Latest news</h3>
+                        @foreach (var item in lastfourblogs)
+                        {
+                            <div class="item">
+                                <a asp-controller="home" asp-action="BlogDetails" asp-route-id="@item.Id">
+                                    <span class="fullimage cover bg1" role="img"></span>
+                                </a>
+                                <div class="info">
+                                    <h4 class="title"><a asp-action="BlogDetails" asp-route-id="@item.Id">@item.BlogTitle</a></h4>
+                                    <span>@item.BlogDate</span>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                        }
+
+
+                    </div>
+                    <div class="side-bar-box tags-box">
+                        <h3 class="title">Tags</h3>
+                        <ul>
+                            <li><a href="#">Medical</a></li>
+                            <li><a href="#">Hospital</a></li>
+                            <li><a href="#">Corona</a></li>
+                            <li><a href="#">Surgery</a></li>
+                            <li><a href="#">Transplant</a></li>
+                            <li><a href="#">Gloves</a></li>
+                            <li><a href="#">Health</a></li>
+                            <li><a href="#">Mask</a></li>
+                            <li><a href="#">Cancer</a></li>
+                            <li><a href="#">Virus</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+          
+            <div id="gallery" class="gallery-area pt-100 pb-70">
+                <div class="container">
+                    <div class="section-title-one">
+
+                        <h2>Blog pictures</h2>
+                    </div>
+
+                    <div class="row" id="Container">
+                        @foreach (var item in blog.BlogImages)
+                        {
+                            <div class="col-lg-4 col-sm-6 mix cardiologist surgery" style="display: inline-block;" data-bound="">
+                                <div class="single-gallery">
+                                    <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(item.Blogimg)}")>
+                                    <div>
+                                        <small>@item.BlogImageTitle</small>
+                                    </div>
+                                    <div class="caption">
+                                        <div class="d-table">
+                                            <div class="d-table-cell">
+                                                <a href="#">
+                                                    <i class="bx bx-right-top-arrow-circle"></i>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(() => {
+        $(listblogcategoryfirst).click(function (event) {
+            let catrgoryIdFirst = $(event.target).val()
+
+            $.get('/home/BlogCategoriesLevelTwo/', { id: catrgoryIdFirst }, value => {
+                $(listblogcategorysecond).html('')
+               
+                $(value).each((index, x) => {
+
+                    $(listblogcategorysecond).append(`<li  value='${x.id}'><a href='/home/BlogCategoriesThree/${x.id}'>${x.blogCategoryname}</a></li>`)
+
+                })
+
+
+            })
+
+        })
+      
+    })
+
+  
+</script>

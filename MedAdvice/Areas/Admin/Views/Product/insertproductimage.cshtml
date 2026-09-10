@@ -1,0 +1,108 @@
+﻿
+@{
+    ViewData["Title"] = "insertproductimage";
+}
+@{
+    Product product = ViewData["product"] as Product;
+
+}
+@model ProductImageViewModel
+
+<h1>ثبت تصاویر کالا</h1>
+<style>
+    form {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+<div class="container">
+    <form asp-area="admin" asp-controller="product" asp-action="insertproductimageconfirm"
+          method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <label>تاریخ ورود کالا</label>
+                <input class="form-control" value="@product.Date" />
+
+            </div>
+            <div class="col-md-6">
+                <label>نام لاتین</label>
+                <input class="form-control" value="@product.englishname" />
+
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-md-6">
+                <label>برند</label>
+                <input class="form-control" value="@product.Brand.name" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="exampleInputFile">تصویر کالا</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input id="file1" type="file" multiple class="custom-file-input" asp-for="img">
+                            <label class="custom-file-label" for="exampleInputFile">انتخاب فایل</label>
+                        </div>
+
+                        @*<div class="input-group-append">
+                            <span class="input-group-text" id="">Upload</span>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label> عنوان فایل عکس</label>
+                <input class="form-control" asp-for="title" />
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div id="divimages">
+                        <img id="imgpreview" width="100" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        <button class="btn btn-success">ثبت تصویر کالا</button>
+        <button class="btn btn-success">
+            <a asp-area="Admin" asp-action="InsertProduct" asp-controller="Product" class="text-white">ورود کالای جدید</a>
+        </button>
+    </form>
+
+
+</div>
+<script>
+    $(() => {
+        $(file1).change(function (event) {
+            $(divimages).html('')//pak mikonad
+            for (var x of event.target.files)//فایلهای عکس انتخاب شده را تک تک بخوان
+            {
+                //event.target.files[0].size
+                var parts = x.name.split('.')
+                if (parts[1].toLowerCase() === "jpg" || parts[1].toLowerCase() === "png" || parts[1].toLowerCase() === "jpeg") {
+                    var reader = new FileReader()
+                    reader.readAsDataURL(x)
+                    reader.onloadend = x => {
+                        $(divimages).append(`<img style="margin:5px" class='rounded-pill' width='100' src='${x.target.result}'/>`)
+                    }
+                } else {
+                    alert('فرمت فایل تصویر مناسب نمی باشد')
+                }
+            }
+        })
+    })
+</script>
+
+

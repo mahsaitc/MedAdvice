@@ -1,0 +1,79 @@
+﻿
+
+@{
+    ViewData["Title"] = "InsertProduct";
+}
+@model ProductViewModel
+@{
+
+    var productcategories = ViewData["productcategories"] as List<ProductCategory>;
+}
+<h1>دسته بندی کالاها</h1>
+<style>
+    form {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+<div class="container">
+    <form asp-area="admin" asp-controller="product" asp-action="InsertProductConfirm" method="post">
+
+        <div class="row">
+            <div class="col-md-6">
+                <label>دسته بندی کالاها</label>
+                <select class="form-control" id="ddlCategoriesFirst">
+                    <option></option>
+                    @foreach (var item in productcategories)
+                    {
+                        <option value="@item.Id">@item.CategoryName</option>
+                    }
+                </select>
+                <label>گروه کالاها</label>
+                <select class="form-control" id="ddlCategoriesSecond">
+                </select>
+                <label>نوع کالاها</label>
+                <select class="form-control" id="ddlCategoriesThird">
+                </select>
+            </div>
+        </div>
+        <div id="div1">
+
+        </div>
+    </form>
+</div>
+<script>
+    $(() => {
+        $(ddlCategoriesThird).change(function (event) {
+            let catrgoryId = $(event.target).val()
+            $.get('/admin/product/getproductbycategory', { categoryid: catrgoryId }, value => {
+                (div1).html(value)
+            })
+        })
+
+        $(ddlCategoriesFirst).change(function (event) {
+            let catrgoryIdFirst = $(event.target).val()
+
+
+            $.get('/admin/product/GetCategories', { categoryId: catrgoryIdFirst }, value => {
+
+
+                $(ddlCategoriesSecond).html('<option></option>')
+                $(value).each((index, x) => {
+                    $(ddlCategoriesSecond).append(`<option value='${x.id}'>${x.categoryName}</option>`)
+                })
+            })
+        })
+        $(ddlCategoriesSecond).change(function (event) {
+            let catrgoryIdSecond = $(event.target).val()
+            $.get('/admin/product/GetCategories', { categoryId: catrgoryIdSecond }, value => {
+                $(ddlCategoriesThird).html('<option></option>')
+                $(value).each((index, x) => {
+                    $(ddlCategoriesThird).append(`<option value='${x.id}'>${x.categoryName}</option>`)
+                })
+            })
+        })
+    })
+</script>

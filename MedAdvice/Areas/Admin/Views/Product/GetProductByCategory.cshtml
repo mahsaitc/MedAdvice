@@ -1,0 +1,18 @@
+﻿@{
+    Layout = null;
+}
+@model List<Product>
+<table class="table table-bordered">
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.englishname</td>
+                <td>@item.price</td>
+                <td>@item.count</td>
+            </tr>
+        }
+    </tbody>
+
+</table>

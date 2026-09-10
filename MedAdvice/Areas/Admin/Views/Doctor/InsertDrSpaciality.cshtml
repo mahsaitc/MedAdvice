@@ -1,0 +1,79 @@
+﻿<h1>InsertSpaciality</h1>
+@model DoctorSpacialityViewModel
+<style>
+    form {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+<div class="container">
+    <form asp-area="Admin" asp-controller="Doctor" asp-action="InsertDrSpaciality" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <label> عنوان تخصص</label>
+                <input class="form-control" asp-for="SpacialityTitle" />
+                <span asp-validation-for="SpacialityTitle"></span>
+            </div>
+            <div class="col-md-6">
+                <label>ای دی پدرتخصص </label>
+                <input class="form-control"  asp-for="DrSpacialityParentId">
+                
+            </div>
+        </div>
+        
+       
+        <div class="input-group">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" asp-for="DrSpacialityPicture" id="headerfile">
+                <label class="custom-file-label" for="exampleInputFile">انتخاب فایل تصویر</label>
+            </div>
+            <div class="input-group-append">
+                <span class="input-group-text" id="">Upload</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div id="divimages">
+                        <img id="headerimgpreview" width="400" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <button class="btn btn-success">ثبت</button>
+    </form>
+
+</div>
+<script>
+    $(() => {
+
+        //$(ddlAdviceCategoriesFirst).change(function (event) {
+        //    let AdviceCategoryIdFirst = $(event.target).val()
+        //    $.get('/admin/advice/GetAdviceCategories', { AdvCategoryId: AdviceCategoryIdFirst }, value => {
+        //        /*alert(JSON.stringify(value))*/
+        //        $(ddlAdviceCategoriesSecond).html('<option></option>')
+
+        //        for (let x of value) {
+
+        //            $(ddlAdviceCategoriesSecond).append(`<option value='${x.id}'>${x.adviceCategoryname}</option>`)
+        //        }
+        //    })
+        //})
+
+
+        $(headerfile).change(function (event) {
+            var reader = new FileReader()
+            reader.readAsDataURL(event.target.files[0])
+            reader.onloadend = x => {
+                $(headerimgpreview).attr('src', x.target.result)
+            }
+        })
+    })
+</script>

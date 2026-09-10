@@ -1,0 +1,97 @@
+﻿@{
+    Layout = null;
+}
+
+@model SignupUserViewmodel
+<script src="https://www.google.com/recaptcha/api.js?hl=en_us" async></script>
+@{
+    TempData["pagename"] = "Sign in/Sign up";
+}
+
+<div class="sign-up-area ptb-100">
+    <div class="container">
+        <div class="section-title-one">
+            <h2>Create an account!</h2>
+
+        </div>
+        <div class="sign-up-form">
+            <form asp-controller="account" asp-action="signupconfirm" method="post">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" asp-for="firstname" placeholder="First name">
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" asp-for="lastname" placeholder="Last name">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" asp-for="username" placeholder="Enter your Username">
+                    <span class="required"></span>
+                    <span asp-validation-for="username"></span>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" asp-for="email" placeholder="Email Address">
+                    <span class="required"></span>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <input type="text" class="form-control" asp-for="phonenumber" placeholder="Phone number">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" asp-for="password" placeholder="Password">
+
+                    <span asp-validation-for="password"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" asp-for="reppasword" placeholder="Confirm Password">
+                    <span asp-validation-for="reppasword"></span>
+                </div>
+                <div class="g-recaptcha" data-sitekey="6LfYpIcnAAAAAMDnIiZJt1GVNMBOkNO9kYwTeM1O">
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="default-btn">Sign Up <span></span></button>
+                    <p class="account-decs">
+                        Already have an account? <a href="sign-in.html">Sign In</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(() => {
+        $(btnsignup).click(function (event) {
+            if (grecaptcha.getResponse().length == 0) {
+                $(modalCheckRecaptcha2).modal()
+                event.preventDefault()
+            }
+        })
+    })
+</script>
+
+<div class="modal fade" id="modalCheckRecaptcha2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="ResetPasswordLevelOne" asp-controller="Account" method="post">
+                <div class="modal-header" style="background-color:darkred">
+                    <h4> error message</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-8">
+                        <label>please mark in the box iam not a robot</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" data-dismiss="modal">return</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

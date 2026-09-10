@@ -1,0 +1,136 @@
+﻿@{
+    Layout = null;
+}
+@model signinuserviewmodel
+
+
+
+<script src="https://www.google.com/recaptcha/api.js?hl=en_us" async></script>
+<div class="page-banner-area bg-6">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <div class="page-content">
+                    <h2>user page</h2>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li>Sign In and sign up</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sign-in-area ptb-100">
+    <div class="container">
+        <div class="section-title-one">
+            <h2>Sign in to your account!</h2>
+        </div>
+        <div class="sign-in-form">
+            <form asp-action="signinconfirm" asp-controller="account" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control" asp-for="username" placeholder="Username or Email">
+                    <span class="required"></span>
+                    <span asp-validation-for="username"></span>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" asp-for="password" placeholder="Password">
+                    <span class="required"></span>
+                    <span asp-validation-for="password"></span>
+                </div>
+                <div class="form-group form-check text-center">
+                    <input type="checkbox" class="form-check-input" asp-for="rememberme">
+                    <label class="form-check-label" for="exampleCheck1">Remember me</label>
+                
+                </div>
+                <div class="g-recaptcha" data-sitekey="6LfYpIcnAAAAAMDnIiZJt1GVNMBOkNO9kYwTeM1O">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary" id="btnlogin">Sign In <span></span></button>
+                    <p>
+                        <a id="btnForgotPassword" href="#" class="lost-password" data-toggle="modal" data-target="#modalGetUserEmail">Forgot Your Password?</a>
+                    </p>
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="modal fade" id="modalGetUserEmail" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="ResetPasswordLevelOne" asp-controller="Account" method="post">
+                <div class="modal-header" style="background-color:orange">
+                    <h4> enter your username</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-8">
+                        <label>username</label>
+                        <input class="form-control" name="username" id="txtusername" />
+                        <span style="color:red" id="txtusernamemessage"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" data-dismiss="modal">return</button>
+                    <button class="btn btn-warning" id="btnResetPassword">send mail</button>
+                    <button class="btn btn-warning"
+                            asp-action="ResetPasswordByPhoneCellLevelOne" asp-controller="Account"
+                            id="btnResetPassword">
+                        send sms
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalCheckRecaptcha">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="ResetPasswordLevelOne" asp-controller="Account" method="post">
+                <div class="modal-header">
+                    <h4> error message</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-8">
+                        <label>please mark in the box Iam not a robot</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" data-dismiss="modal">return</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(() => {
+        $(btnlogin).click(function (event) {
+            if (grecaptcha.getResponse().length == 0) {
+                $(modalCheckRecaptcha).modal()
+                event.preventDefault()
+            }
+        })
+
+        $(btnForgotPassword).click(function (event) {
+            event.preventDefault()
+
+            $(modalGetUserEmail).modal(show)
+        })
+        $(btnResetPassword).click(function (event) {
+            if ($(txtusername).val() === "") {
+                $(txtusernamemessage).html('Please enter your user name')
+                event.preventDefault()
+            } else {
+                $(txtusernamemessage).html('')
+            }
+        })
+    })
+</script>

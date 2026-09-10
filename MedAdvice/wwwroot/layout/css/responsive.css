@@ -1,0 +1,1026 @@
+@media only screen and (max-width:767px) {
+	.section-title-one {
+		margin: 0 auto 30px
+	}
+	.section-title-one span {
+		font-size: 12px
+	}
+	.section-title-one h2 {
+		font-size: 26px
+	}
+	.section-title-two span {
+		font-size: 12px
+	}
+	.section-title-two span::before {
+		top: 10px
+	}
+	.section-title-two h2 {
+		font-size: 25px
+	}
+	.section-title-two p {
+		font-size: 15px
+	}
+	.section-title-three {
+		margin-bottom: 40px;
+		padding-bottom: 25px
+	}
+	.section-title-three span {
+		font-size: 13px
+	}
+	.section-title-three h2 {
+		font-size: 25px
+	}
+	.ptb-100 {
+		padding-top: 50px;
+		padding-bottom: 50px
+	}
+	.pt-100 {
+		padding-top: 50px
+	}
+	.pb-70 {
+		padding-bottom: 20px
+	}
+	.pb-100 {
+		padding-bottom: 50px
+	}
+	.top-header .header-content .flag-area {
+		margin: 0 0 10px
+	}
+	.top-header .header-content .contact-area {
+		text-align: left;
+		max-width: 190px
+	}
+	.top-header .header-content .contact-area li {
+		font-size: 12px;
+		padding-left: 30px;
+		margin-bottom: 10px;
+		margin-left: 0
+	}
+	.top-header .header-content .contact-area li:last-child {
+		margin-bottom: 0
+	}
+	.top-header .header-content .contact-area li i {
+		width: 25px;
+		height: 25px;
+		line-height: 25px;
+		font-size: 15px;
+		top: 0
+	}
+	.top-header .header-content .contact-area li a {
+		font-size: 13px
+	}
+	.top-header .flag-area {
+		top: -10px;
+		padding-top: 5px
+	}
+	.flag-area .flag-item-top .flag-bar span {
+		font-size: 13px
+	}
+	.banner-area {
+		margin: -60px 5px 0;
+		border-radius: 15px;
+		padding-top: 100px;
+		padding-bottom: 100px
+	}
+	.banner-area .banner-text {
+		margin-bottom: 30px;
+		text-align: center
+	}
+	.banner-area .banner-text span {
+		font-size: 12px
+	}
+	.banner-area .banner-text h1 {
+		font-size: 30px
+	}
+	.banner-area .banner-text p {
+		font-size: 15px;
+		margin-bottom: 25px
+	}
+	.banner-area .banner-text .search-form .form-group .form-control.b-right::before {
+		display: none
+	}
+	.banner-area .banner-text .search-form .form-group .text-btn .default-btn {
+		margin-left: 5px
+	}
+	.banner-area .banner-text .search-form .form-group .nice-select {
+		border-bottom: 1px solid #eee
+	}
+	.banner-area .banner-img {
+		max-width: 280px;
+		margin: auto
+	}
+	.banner-area .banner-img .shape-1 {
+		max-width: 200px;
+		left: 0;
+		right: 0;
+		margin: auto
+	}
+	.banner-area .banner-img .shape-2 {
+		right: auto;
+		left: 0;
+		max-width: 225px
+	}
+	.banner-area .banner-img .image-1 {
+		bottom: -50px
+	}
+	.banner-area .banner-img .image-1 img {
+		max-width: 150px;
+		border: 3px solid #fff
+	}
+	.banner-area .banner-img .image-2 {
+		top: 0;
+		right: 0;
+		left: 0;
+		text-align: center
+	}
+	.banner-area .banner-img .image-2 img {
+		max-width: 110px;
+		border: 2px solid #fff
+	}
+	.banner-area .banner-img .image-3 {
+		right: 3%;
+		top: 100px
+	}
+	.banner-area .banner-img .image-3 img {
+		max-width: 85px
+	}
+	.about-area .about-img {
+		right: 0;
+		margin-bottom: 30px
+	}
+	.about-area .about-img .main-img .shape-1 {
+		top: -20px;
+		right: -10px;
+		max-width: 150px
+	}
+	.about-area .about-img .main-img .shape-2 {
+		bottom: -15px;
+		max-width: 180px
+	}
+	.about-area .about-img .main-img .shape-3 {
+		left: -10px;
+		max-width: 200px
+	}
+	.about-area .about-text {
+		padding-left: 0
+	}
+	.about-area .about-text ul li i {
+		top: 0
+	}
+	.appointment-area .appointment-text {
+		margin-bottom: 30px
+	}
+	.appointment-area .appointment-img .img-one {
+		left: 0
+	}
+	.appointment-area .appointment-img .img-two {
+		bottom: 30px
+	}
+	.appointment-area .appointment-img .img-two img {
+		border-radius: 10px;
+		max-width: 115px
+	}
+	.appointment-area .appointment-img .img-three {
+		top: 15px;
+		right: -10px
+	}
+	.appointment-area .appointment-img .img-three img {
+		max-width: 121px;
+		border-radius: 10px
+	}
+	.service-card {
+		text-align: center
+	}
+	.service-card .main-icon {
+		width: 60px;
+		height: 60px;
+		line-height: 60px;
+		font-size: 30px;
+		margin-bottom: 20px
+	}
+	.service-card h3 {
+		font-size: 18px;
+		margin-bottom: 10px;
+		line-height: 1.4
+	}
+	.service-card p {
+		font-size: 15px
+	}
+	.choice-of-choice .choice-img img {
+		border-radius: 20px;
+		margin-bottom: 30px
+	}
+	.choice-of-choice .choice-text ul li {
+		padding-left: 25px;
+		font-size: 15px;
+		margin-bottom: 6px
+	}
+	.choice-of-choice .choice-text ul li i {
+		font-size: 15px;
+		top: 2px
+	}
+	.about-btn {
+		margin-top: 30px
+	}
+	.special-area .special-text {
+		margin-bottom: 30px
+	}
+	.work-card {
+		text-align: center
+	}
+	.work-card i {
+		width: 60px;
+		height: 60px;
+		line-height: 60px;
+		font-size: 30px;
+		margin-bottom: 20px
+	}
+	.work-card h3 {
+		font-size: 18px;
+		margin-bottom: 10px;
+		line-height: 1.4
+	}
+	.work-card p {
+		font-size: 15px
+	}
+	.team-card .caption h3 a {
+		font-size: 18px
+	}
+	.team-card .caption span {
+		font-size: 13px
+	}
+	.gallery-menu ul li {
+		padding: 7px 10px;
+		font-size: 13px;
+		margin-bottom: 10px
+	}
+	.testimonials-area .testimonials-slider .slider-item .testimonials-img img {
+		margin-bottom: 30px
+	}
+	.testimonials-area .testimonials-slider .slider-item .testimonials-img .shape img {
+		display: none
+	}
+	.testimonials-area .testimonials-slider .slider-item .testimonials-text {
+		padding-left: 0;
+		text-align: center
+	}
+	.testimonials-area .testimonials-slider .slider-item .testimonials-text .client-1 {
+		padding: 30px 25px
+	}
+	.testimonials-area .testimonials-slider .slider-item .testimonials-text .client-1 img {
+		margin: 0 auto 20px;
+		position: initial
+	}
+	.testimonials-area .testimonials-slider .slider-item .testimonials-text .client-1 p {
+		font-size: 14px
+	}
+	.testimonials-area .testimonials-slider .slider-item .testimonials-text .client-1 i {
+		font-size: 30px
+	}
+	.testimonials-area .testimonials-slider .slider-item .testimonials-text .client-1 ul li {
+		font-size: 14px
+	}
+	.testimonials-area .testimonials-slider.owl-theme .owl-dots {
+		right: auto;
+		top: 0;
+		left: 0
+	}
+	.blog-card .b-card-text h3 a {
+		font-size: 17px
+	}
+	.blog-card .b-card-text p {
+		font-size: 13px
+	}
+	.footer-area .footer-widget {
+		margin-bottom: 30px
+	}
+	.footer-area .footer-widget h2 {
+		font-size: 20px;
+		margin-bottom: 15px
+	}
+	.footer-area .footer-widget p {
+		font-size: 13px
+	}
+	.footer-area .footer-widget.pl-50 {
+		padding-left: 0
+	}
+	.footer-area .footer-widget .widget-list li {
+		margin-bottom: 5px;
+		font-size: 13px
+	}
+	.footer-area .footer-widget .widget-time li {
+		margin-bottom: 5px;
+		font-size: 13px
+	}
+	.check-up-area .check-up-text .section-title-two h2 {
+		font-size: 26px
+	}
+	.banner-two {
+		padding-top: 60px
+	}
+	.banner-two .b-two-text {
+		margin-bottom: 30px;
+		text-align: center
+	}
+	.banner-two .b-two-text h1 {
+		font-size: 30px
+	}
+	.banner-two .b-two-text p {
+		font-size: 15px
+	}
+	.banner-two .b-two-img .main-img img {
+		left: 0;
+		border-radius: 10px
+	}
+	.banner-two .banner-two-shape .shape-1 {
+		max-width: 100px
+	}
+	.banner-two .banner-two-shape .shape-3 {
+		left: 0;
+		z-index: -1
+	}
+	.dedicated-card {
+		text-align: center
+	}
+	.dedicated-card .d-card-text h3 {
+		font-size: 20px
+	}
+	.dedicated-card .d-card-text p {
+		font-size: 13px
+	}
+	.agency-area .agency-img {
+		margin-bottom: 60px
+	}
+	.agency-area .agency-img img {
+		border-radius: 100px 20px 100px 20px
+	}
+	.agency-area .agency-img::before {
+		border-radius: 100px 20px 100px 20px
+	}
+	.agency-area .agency-text .agency-btn .popup-youtube i {
+		top: 0
+	}
+	.agency-area .agency-text .agency-btn h3 {
+		font-size: 20px
+	}
+	.agency-area .agency-text .agency-btn p {
+		font-size: 13px
+	}
+	.treatment-card {
+		text-align: center
+	}
+	.treatment-card .shape {
+		margin: auto
+	}
+	.treatment-card .shape i {
+		font-size: 70px
+	}
+	.treatment-card h3 {
+		font-size: 20px
+	}
+	.treatment-card p {
+		font-size: 13px
+	}
+	.check-up-text {
+		margin-bottom: 30px
+	}
+	.frequently-area .frequently-text {
+		margin-bottom: 30px
+	}
+	.frequently-area .frequently-text .faq-contant .accordion li .title {
+		font-size: 14px;
+		padding: 15px 40px 15px 20px
+	}
+	.frequently-area .frequently-img {
+		left: 0
+	}
+	.frequently-area .frequently-img .main-img img {
+		border-radius: 100px 20px 20px
+	}
+	.offers-area .offer-img {
+		margin-bottom: 60px
+	}
+	.offers-area .offer-img::before {
+		left: -15px;
+		bottom: -15px
+	}
+	.clients-card {
+		padding: 30px
+	}
+	.clients-card .clients-name {
+		text-align: center;
+		padding-top: 15px;
+		margin-top: 15px
+	}
+	.clients-card .clients-name span {
+		font-size: 13px
+	}
+	.clients-card .clients-name h3 {
+		font-size: 18px
+	}
+	.clients-card .clients-name .rating {
+		position: initial;
+		margin-top: 5px
+	}
+	.banner-three-area {
+		padding: 70px 0
+	}
+	.banner-three-area .banner-three-text span {
+		font-size: 13px
+	}
+	.banner-three-area .banner-three-text h1 {
+		font-size: 35px
+	}
+	.banner-three-area .banner-three-text p {
+		font-size: 15px
+	}
+	.experience-area .experience-img {
+		right: 0;
+		margin-bottom: 65px
+	}
+	.appointment-three .a-three-text {
+		margin-bottom: 30px
+	}
+	.appointment-three .appointment-three-img {
+		left: auto;
+		padding-right: 20px
+	}
+	.appointment-three .appointment-three-img::before {
+		right: -15px;
+		border: 10px solid #207ef7;
+		border-radius: 50px
+	}
+	.instragram-gallery .gallery-menu ul {
+		margin: -20px 0 0
+	}
+	.information-area .section-title-two h2 {
+		font-size: 25px
+	}
+	.information-area .information-img {
+		padding: 40px 0 40px 20px;
+		margin-bottom: 30px
+	}
+	.information-area .information-img::before {
+		left: -14px;
+		border: 10px solid #a5efdf;
+		border-radius: 50px
+	}
+	.page-banner-area {
+		height: 250px
+	}
+	.sign-up-area .sign-up-form {
+		padding: 40px 20px
+	}
+	.terms-condition h3 {
+		font-size: 20px
+	}
+	.contact-area .contact-form {
+		margin-bottom: 30px
+	}
+	.contact-area .contact-form h3 {
+		font-size: 25px
+	}
+	.services-dateils-area .services-details {
+		margin-bottom: 30px
+	}
+	.services-dateils-area .services-details h2 {
+		font-size: 25px
+	}
+	.services-dateils-area .services-details p {
+		font-size: 13px
+	}
+	.services-dateils-area .services-details .details-text h2 {
+		font-size: 25px
+	}
+	.services-dateils-area .services-details .details-text p {
+		font-size: 13px
+	}
+	.services-dateils-area .services-details ul li {
+		margin-right: 10px
+	}
+	.services-dateils-area .widget-area .widget_posts_thumb {
+		margin-bottom: 25px!important
+	}
+	.services-dateils-area .widget-area .widget_posts_thumb .item .info .title {
+		margin-bottom: 2px;
+		font-size: 15px
+	}
+	.contact-form h3 {
+		font-size: 25px
+	}
+	.choose-card {
+		padding: 30px 13px
+	}
+	.choose-card i {
+		font-size: 60px;
+		margin-bottom: 15px
+	}
+	.experience-area .experience-img {
+		padding-left: 10px
+	}
+	.experience-area .experience-img::before {
+		left: -15px;
+		border: 10px solid #207ef7;
+		bottom: -25px
+	}
+	.flag-area .flag-item-top .flag-item-bottom {
+		top: 50px!important;
+		width: 160px
+	}
+	.instragram-gallery .gallery-menu ul li {
+		margin: 0 10px
+	}
+	.mean-container .mean-nav {
+		margin-top: 45px
+	}
+	.treatment-card .shape img {
+		margin-bottom: 15px
+	}
+	.error-area .error h2 {
+		font-size: 20px
+	}
+	.error-area .error .error-btn a {
+		font-size: 30px
+	}
+}
+@media only screen and (min-width:576px) and (max-width:767px) {
+	.banner-area {
+		margin: -60px 5px 0;
+		border-radius: 15px
+	}
+	.banner-area .banner-img .shape-1 {
+		max-width: 250px
+	}
+	.banner-area .banner-img .shape-2 {
+		left: 20%;
+		max-width: 270px
+	}
+	.banner-area .banner-img .image-1 {
+		bottom: -50px;
+		left: 20%
+	}
+	.banner-area .banner-img .image-1 img {
+		max-width: 180px
+	}
+	.banner-area .banner-img .image-3 {
+		right: 25%
+	}
+	.service-card {
+		padding: 17px
+	}
+	.work-card {
+		padding: 20px
+	}
+	.choose-card {
+		padding: 30px 16px
+	}
+	.services-card-three .s-card-three-text {
+		padding: 25px 22px 30px
+	}
+	.appointment-three .a-three-text {
+		margin-bottom: 30px
+	}
+	.doctors-card .caption .caption-text h3 {
+		font-size: 20px
+	}
+	.doctors-card .caption .caption-text p {
+		font-size: 13px
+	}
+	.top-header .header-content .contact-area {
+		max-width: none
+	}
+	.top-header .header-content .contact-area li {
+		margin-right: 8px
+	}
+	.top-header .header-content .contact-area li:first-child {
+		margin-right: 8px
+	}
+}
+@media only screen and (min-width:768px) and (max-width:991px) {
+	.section-title-one h2 {
+		font-size: 30px
+	}
+	.section-title-two h2 {
+		font-size: 30px
+	}
+	.ptb-100 {
+		padding-top: 70px;
+		padding-bottom: 70px
+	}
+	.pb-100 {
+		padding-bottom: 70px
+	}
+	.pb-70 {
+		padding-bottom: 40px
+	}
+	.pt-100 {
+		padding-top: 70px
+	}
+	.top-header .header-content .contact-area {
+		text-align: right
+	}
+	.top-header .header-content .contact-area li {
+		font-size: 12px;
+		padding-left: 30px;
+		margin-left: 0
+	}
+	.top-header .header-content .contact-area li i {
+		width: 25px;
+		height: 25px;
+		line-height: 25px;
+		font-size: 15px;
+		top: 0
+	}
+	.top-header .header-content .contact-area li a {
+		font-size: 13px
+	}
+	.banner-area {
+		margin: -60px 20px 0;
+		border-radius: 15px
+	}
+	.banner-area .banner-text h1 {
+		font-size: 40px;
+		margin-bottom: 20px
+	}
+	.banner-two {
+		padding-top: 80px
+	}
+	.banner-two .b-two-img .main-img {
+		text-align: center
+	}
+	.banner-two .b-two-img .main-img img {
+		left: 0
+	}
+	.banner-two .b-two-text {
+		margin-bottom: 30px;
+		text-align: center
+	}
+	.banner-two .b-two-text h1 {
+		font-size: 45px
+	}
+	.banner-two .b-two-text p {
+		font-size: 16px
+	}
+	.banner-two .banner-two-shape .shape-1 {
+		max-width: 235px
+	}
+	.agency-area .agency-img {
+		margin-bottom: 55px
+	}
+	.agency-area .agency-img img {
+		width: 100%
+	}
+	.agency-area .agency-text .agency-btn .popup-youtube i {
+		top: 2px
+	}
+	.check-up-area .check-up-text {
+		margin-bottom: 30px
+	}
+	.check-up-area .check-up-img .main-img {
+		text-align: center
+	}
+	.check-up-area .check-up-img .shape {
+		left: 20px
+	}
+	.offers-area .offer-img {
+		margin-bottom: 60px
+	}
+	.offers-area .offer-img img {
+		width: 100%
+	}
+	.clients-slider .clients-card {
+		margin: 50px 10px 30px
+	}
+	.frequently-area .frequently-text {
+		margin-bottom: 30px
+	}
+	.frequently-area .frequently-img {
+		left: 0
+	}
+	.frequently-area .frequently-img .main-img img {
+		width: 100%
+	}
+	.banner-three-area {
+		padding: 100px 0
+	}
+	.banner-three-area .banner-three-text h1 {
+		font-size: 45px
+	}
+	.experience-area .experience-img {
+		margin-bottom: 35px;
+		margin-bottom: 65px;
+		padding-left: 50px
+	}
+	.experience-area .experience-img img {
+		width: 100%
+	}
+	.experience-area .experience-img::before {
+		left: 0
+	}
+	.appointment-three .appointment-three-img {
+		left: 0;
+		padding-right: 50px
+	}
+	.appointment-three .appointment-three-img::before {
+		right: 0
+	}
+	.appointment-three .appointment-three-img img {
+		width: 100%
+	}
+	.information-area .information-img {
+		padding-left: 50px;
+		margin-bottom: 30px
+	}
+	.information-area .information-img img {
+		width: 100%
+	}
+	.information-area .information-img::before {
+		left: 0
+	}
+	.clients-card {
+		padding: 30px
+	}
+	.clients-card .clients-name {
+		text-align: center;
+		padding-top: 15px;
+		margin-top: 15px
+	}
+	.clients-card .clients-name span {
+		font-size: 13px
+	}
+	.clients-card .clients-name h3 {
+		font-size: 18px
+	}
+	.clients-card .clients-name .rating {
+		position: initial;
+		margin-top: 5px
+	}
+	.page-banner-area {
+		height: 320px
+	}
+	.blog-card .b-card-text h3 a {
+		font-size: 18px
+	}
+	.appointment-area .appointment-text {
+		margin-bottom: 30px
+	}
+	.appointment-area .appointment-img .img-three {
+		right: 0
+	}
+	.services-dateils-area .services-details h2 {
+		font-size: 25px
+	}
+	.services-dateils-area .services-details p {
+		font-size: 13px
+	}
+	.services-dateils-area .services-details .details-text h2 {
+		font-size: 25px
+	}
+	.services-dateils-area .services-details .details-text p {
+		font-size: 13px
+	}
+	.service-card h3 {
+		font-size: 20px
+	}
+	.service-card p {
+		font-size: 14px
+	}
+	.choice-img {
+		margin-bottom: 30px
+	}
+	.special-area .special-text {
+		margin-bottom: 30px
+	}
+	.special-area .special-img .img-main img {
+		width: 100%
+	}
+	.banner-area {
+		padding-top: 150px;
+		padding-bottom: 180px
+	}
+	.banner-area .banner-text {
+		margin-bottom: 30px
+	}
+	.banner-area .banner-text p {
+		font-size: 17px
+	}
+	.banner-area .banner-text .search-form .form-group .text-btn {
+		padding-left: 5px
+	}
+	.banner-area .banner-img .image-2 {
+		top: 0;
+		right: 10%
+	}
+	.banner-area .banner-img .image-3 {
+		right: 15%;
+		top: 211px
+	}
+	.banner-area .banner-img .shape-2 {
+		right: 185px
+	}
+	.about-area .about-img {
+		right: 0;
+		margin-bottom: 50px
+	}
+	.testimonials-area .testimonials-slider .slider-item .testimonials-img .shape img {
+		display: none
+	}
+	.testimonials-area .testimonials-slider.owl-theme .owl-dots {
+		right: auto;
+		left: 0
+	}
+	.appointment-three .a-three-text {
+		margin-bottom: 30px
+	}
+	.choice-of-choice .choice-img img {
+		width: 100%
+	}
+	.gallery-menu ul li {
+		margin: 0 5px 20px
+	}
+	.flag-area .flag-item-top:hover .flag-item-bottom {
+		top: 50px;
+		left: 35px
+	}
+	.about-area .about-img .main-img .shape-1 {
+		right: 0
+	}
+	.appointment-area .appointment-img .img-one {
+		left: 0;
+		text-align: center
+	}
+	.banner-area .banner-text .search-form .form-group .nice-select {
+		border-bottom: 1px solid #eee
+	}
+	.error-area .error h2 {
+		font-size: 22px
+	}
+	.error-area .error .error-btn a {
+		font-size: 35px
+	}
+}
+@media only screen and (min-width:992px) and (max-width:1199px) {
+	.banner-two .b-two-text h1 {
+		font-size: 55px
+	}
+	.banner-two .b-two-img .main-img img {
+		left: 0
+	}
+	.banner-two .banner-two-shape .shape-1 {
+		max-width: 300px
+	}
+	.dedicated-card .d-card-text h3 {
+		font-size: 24px
+	}
+	.blog-card .b-card-text h3 a {
+		font-size: 17px
+	}
+	.footer-area .footer-widget h2 {
+		font-size: 19px
+	}
+	.footer-area .footer-widget p {
+		font-size: 14px
+	}
+	.footer-area .footer-widget.pl-50 {
+		padding-left: 0
+	}
+	.appointment-three .appointment-three-img {
+		left: 0
+	}
+	.appointment-three .appointment-three-img::before {
+		right: -30px
+	}
+	.information-area .information-img::before {
+		left: -30px
+	}
+	.blog-three-card .b-three-card-text h3 {
+		font-size: 18px
+	}
+	.banner-three-area {
+		padding: 150px 0
+	}
+	.banner-three-area .banner-three-text h1 {
+		font-size: 50px
+	}
+	.frequently-area .frequently-img {
+		left: 0
+	}
+	.frequently-area .frequently-img .shape-1 {
+		left: -15px
+	}
+	.service-card h3 {
+		font-size: 20px
+	}
+	.blog-card .b-card-text h3 a {
+		font-size: 16px
+	}
+	.appointment-area .appointment-img .img-one {
+		left: 15px
+	}
+	.appointment-area .appointment-img .img-three {
+		right: -30px
+	}
+	.services-dateils-area .services-details h2 {
+		font-size: 28px
+	}
+	.services-dateils-area .services-details p {
+		font-size: 14px
+	}
+	.services-dateils-area .services-details .details-text h2 {
+		font-size: 28px
+	}
+	.services-dateils-area .services-details .details-text p {
+		font-size: 14px
+	}
+	.services-dateils-area .widget-area .widget_posts_thumb .item .info .title {
+		margin-bottom: 2px;
+		font-size: 15px
+	}
+	.top-header .header-content .contact-area {
+		text-align: right
+	}
+	.top-header .header-content .contact-area li {
+		font-size: 12px;
+		padding-left: 30px;
+		margin-left: 20px
+	}
+	.top-header .header-content .contact-area li i {
+		width: 25px;
+		height: 25px;
+		line-height: 25px;
+		font-size: 15px;
+		top: 0
+	}
+	.top-header .header-content .contact-area li a {
+		font-size: 13px
+	}
+	.banner-area {
+		margin: -60px 20px 0;
+		border-radius: 25px
+	}
+	.banner-area .banner-text h1 {
+		font-size: 50px;
+		margin-bottom: 15px
+	}
+	.banner-area .banner-text p {
+		font-size: 18px
+	}
+	.banner-area .banner-text .search-form .form-group .nice-select .list .option {
+		font-size: 12px;
+		line-height: 20px;
+		padding: 5px 10px
+	}
+	.banner-area .banner-img .image-1 img {
+		max-width: 240px
+	}
+	.banner-area .banner-img .image-2 {
+		top: -30px;
+		right: 0
+	}
+	.banner-area .banner-img .image-3 {
+		right: 0;
+		top: 180px
+	}
+	.banner-area .banner-img .image-3 img {
+		max-width: 125px
+	}
+	.banner-area .banner-img .shape-1 {
+		left: 0
+	}
+	.banner-area .banner-img .shape-2 {
+		right: auto;
+		max-width: 325px;
+		left: 0
+	}
+	.service-card {
+		padding: 14px
+	}
+	.service-card p {
+		font-size: 14px
+	}
+	.testimonials-area .testimonials-slider .slider-item .testimonials-img .shape img {
+		bottom: 0;
+		left: 30px;
+		max-width: 240px
+	}
+	.about-area .about-img {
+		right: 0
+	}
+	.about-area .about-img .main-img .shape-1 {
+		right: -25px
+	}
+	.dedicated-card p {
+		font-size: 14px
+	}
+	.treatment-card p {
+		font-size: 14px
+	}
+	.experience-area .experience-img {
+		right: 0
+	}
+}
+@media only screen and (min-width:1200px) {
+	.container {
+		max-width: 1170px
+	}
+}

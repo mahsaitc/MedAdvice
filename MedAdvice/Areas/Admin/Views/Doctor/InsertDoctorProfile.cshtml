@@ -1,0 +1,210 @@
+﻿
+<h1>InsertDoctorProfile</h1>
+
+
+
+@model DoctorViewModel
+@{
+    var brands = ViewData["brands"] as List<Brand>;
+    var doctorspacaiality = ViewData["doctorspacaiality"] as List<DoctorSpaciality>;
+}
+<style>
+    form {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+<div class="container">
+    <form asp-area="admin" asp-controller="doctor" asp-action="InsertDoctorConfirm" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <label> نام پزشک</label>
+                <input class="form-control" asp-for="FirstName" />
+                <span asp-validation-for="FirstName"></span>
+            </div>
+            <div class="col-md-6">
+                <label>نام خانوادگی</label>
+                <input class="form-control" asp-for="FamillyName" />
+                <span asp-validation-for="FamillyName"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label>تاریخ شروع همکاری</label>
+                <input class="form-control" asp-for="CollaborationDate" />
+                <span asp-validation-for="CollaborationDate"></span>
+            </div>
+            <div class="col-md-6">
+                <label>مکان های فعالیت</label>
+                <input class="form-control" asp-for="DrServiceLocation" />
+                <span asp-validation-for="DrServiceLocation"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label> تاریخ تولد</label>
+                <input class="form-control" asp-for="DrBirthDate" />
+                <span asp-validation-for="DrBirthDate"></span>
+            </div>
+            <div class="col-md-6">
+                <label>شماره نظام پزشکی</label>
+                <input class="form-control" asp-for="MedicalCouncilNo" />
+                <span asp-validation-for="MedicalCouncilNo"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label> کد ملی</label>
+                <input class="form-control" asp-for="NationalCode" />
+                <span asp-validation-for="NationalCode"></span>
+            </div>
+            <div class="col-md-6">
+                <label>ادرس ایمیل</label>
+                <input class="form-control" asp-for="EmailAdress" />
+                <span asp-validation-for="EmailAdress"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label> شماره موبایل</label>
+                <input class="form-control" asp-for="Mobilenumber" />
+                <span asp-validation-for="Mobilenumber"></span>
+            </div>
+            <div class="col-md-6">
+                <label>شماره تلفن</label>
+                <input class="form-control" asp-for="PhoneNumber" />
+                <span asp-validation-for="PhoneNumber"></span>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label> ایدی فیسبوک</label>
+                <input class="form-control" asp-for="FacebookId" />
+                <span asp-validation-for="FacebookId"></span>
+            </div>
+            <div class="col-md-6">
+                <label>ایدی اینستاگرام</label>
+                <input class="form-control" asp-for="InstagramId" />
+                <span asp-validation-for="InstagramId"></span>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label> ایدی تویتر</label>
+                <input class="form-control" asp-for="TwitterId" />
+                <span asp-validation-for="TwitterId"></span>
+            </div>
+            
+
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label>گروه کلی </label>
+                <select class="form-control" id="ddlCategoriesFirst">
+                    <option></option>
+                    @foreach (var item in doctorspacaiality)
+                    {
+                        <option value="@item.Id">@item.SpacialityTitle</option>
+                    }
+                </select>
+                <label>تخصص</label>
+                <select class="form-control" id="ddlCategoriesSecond" asp-for="DrSpacialityId" >
+                </select>
+                @*<label>فوق تخصص</label>
+                <select class="form-control" id="ddlCategoriesThird" asp-for="DrSpacialityId">
+                </select>*@
+            </div>
+        </div>
+        <div class="form-group">
+            <label>معرفی خلاصه</label>
+            <textarea asp-for="DrBriefIntroduction" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-info card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+
+                            <small>متن اصلی معرفی پزشک</small>
+                        </h3>
+                        <!-- tools box -->
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool btn-sm" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+
+                        </div>
+                        <!-- /. tools -->
+                    </div>
+                    <!-- /.card-header -->
+                    <div>
+
+                        <textarea id="txt1" asp-for="DrDetails"></textarea>
+                        <script>
+                            CKEDITOR.replace('txt1', {
+                            })
+                        </script>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="input-group">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" asp-for="DrProfileImage" id="headerfile">
+                <label class="custom-file-label" for="exampleInputFile">انتخاب فایل تصویر</label>
+            </div>
+            <div class="input-group-append">
+                <span class="input-group-text" id="">Upload</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div id="divimages">
+                        <img id="headerimgpreview" width="400" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <button class="btn btn-success">ثبت</button>
+    </form>
+</div>
+<script>
+    $(() => {
+        $(ddlCategoriesFirst).change(function (event) {
+            let catrgoryIdFirst = $(event.target).val()
+
+
+            $.get('/admin/doctor/GetCategories', { categoryId: catrgoryIdFirst }, value => {
+
+
+                $(ddlCategoriesSecond).html('<option></option>')
+                $(value).each((index, x) => {
+                    $(ddlCategoriesSecond).append(`<option value='${x.id}'>${x.spacialityTitle}</option>`)
+                })
+            })
+        })
+        
+        $(headerfile).change(function (event) {
+            var reader = new FileReader()
+            reader.readAsDataURL(event.target.files[0])
+            reader.onloadend = x => {
+                $(headerimgpreview).attr('src', x.target.result)
+            }
+        })
+    })
+</script>
+
+

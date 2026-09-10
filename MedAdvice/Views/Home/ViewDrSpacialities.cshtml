@@ -1,0 +1,48 @@
+﻿
+@model List<DoctorSpaciality>
+<div class="page-banner-area bg-2">
+    <div class="d-table">
+        <div class="d-table-cell">
+            <div class="container">
+                <div class="page-content">
+                    <h2>Doctor Spatialities</h2>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li>Doctor Spatialities</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="services-area ptb-100">
+    <div class="container">
+        <div class="section-title-one">
+            <span>Spaciality of Emergency Conditions</span>
+            <h2>Spaciality of Emergency Conditions</h2>
+        </div>
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-3 col-sm-6">
+                    <div class="service-card">
+                        <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(item.DrSpacialityPicture)}")>
+                        @*<i class="bx bx-strikethrough main-icon"></i>*@
+                        <h3>@item.SpacialityTitle</h3>
+                        <p>@item.SpacialityTitle</p>
+                        <div class="view-more">
+                            <a asp-controller="home" asp-action="ViewDoctorsbyCategory"  asp-route-id="@item.Id">
+                                View More
+                                <i class="bx bx-right-arrow-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+
+
+        </div>
+    </div>
+</div>
