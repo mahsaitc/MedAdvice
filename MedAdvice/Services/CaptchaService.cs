@@ -15,20 +15,22 @@ namespace MedAdvice.Services
     public class CaptchaService
     {
         IConfiguration configuration;
-        public CaptchaService(IConfiguration _configuration)
+        IHttpClientFactory httpClientFactory;
+        public CaptchaService(IConfiguration _configuration, IHttpClientFactory _httpClientFactory)
         {
             configuration = _configuration;
+            httpClientFactory = _httpClientFactory;
         }
         class RecaptchaModel
         {
             public bool success { get; set; }
         }
-        public CaptchaServiceResult verifycaptcha(Controller controller)
+        public async Task<CaptchaServiceResult> VerifyCaptchaAsync(Controller controller)
         {
             string secretkey = configuration["Recaptcha:SecretKey"];
-            HttpClient httpclient = new HttpClient();
+            HttpClient httpclient = httpClientFactory.CreateClient();
             var captcha = controller.Request.Form["g-recaptcha-response"];
-            var res = httpclient.GetAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretkey}&response={captcha}").Result;
+            var res = await httpclient.GetAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretkey}&response={captcha}");
             if (res.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 controller.TempData["msg"] = "Error in evaluation of captcha by google";
@@ -37,7 +39,7 @@ namespace MedAdvice.Services
             }
             else
             {
-                string json = res.Content.ReadAsStringAsync().Result;
+                string json = await res.Content.ReadAsStringAsync();
                 RecaptchaModel recaptchaModel = Newtonsoft.Json.JsonConvert.DeserializeObject<RecaptchaModel>(json);
                 if (recaptchaModel.success == false)
                 {

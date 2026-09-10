@@ -25,42 +25,44 @@ namespace MedAdvice.Areas.Customer.Controllers
             userManager = _userManager;
         }
         [AllowAnonymous]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var products = db.Products.Include(x => x.productImages).Include(y=>y.Brand).Include(z=>z.productcategory).ToList();
+            var products = await db.Products.Include(x => x.productImages).Include(y=>y.Brand).Include(z=>z.productcategory).ToListAsync();
             return View(products);
         }
         [AllowAnonymous]
-        public IActionResult ProductDetails(int id)
+        public async Task<IActionResult> ProductDetails(int id)
         {
-            Product product = db.Products.Include(x => x.productImages).Include(z=>z.productcategory).Include(m=>m.Brand).FirstOrDefault(y => y.Id == id);
+            Product product = await db.Products.Include(x => x.productImages).Include(z=>z.productcategory).Include(m=>m.Brand).FirstOrDefaultAsync(y => y.Id == id);
             
-            var productcategorieslevelone = db.ProductCategories.Where(x => x.ParentId == null).ToList();
-            var blogs = db.Blogs.Include(x => x.BlogImages).Include(y => y.BlogCategory).ToList();
-            var lastfourblogs = blogs.TakeLast(4).ToList();
+            var productcategorieslevelone = await db.ProductCategories.Where(x => x.ParentId == null).ToListAsync();
+            var lastfourblogs = await db.Blogs
+                .OrderByDescending(x => x.Id)
+                .Take(4)
+                .ToListAsync();
             ViewData["lastfourblogs"] = lastfourblogs;
             ViewData["productcategorieslevelone"] = productcategorieslevelone;
             return View(product);
         }
         [AllowAnonymous]
-        public IActionResult ProductCategoryone()
+        public async Task<IActionResult> ProductCategoryone()
         {
-            var productcategoriesone = db.ProductCategories.Where(y => y.ParentId == null).ToList();
+            var productcategoriesone = await db.ProductCategories.Where(y => y.ParentId == null).ToListAsync();
             return View(productcategoriesone);
         }
       [AllowAnonymous]
       [HttpGet]
-      public IActionResult productCategoriesLevelTwo(int id)
+      public async Task<IActionResult> productCategoriesLevelTwo(int id)
         {
-            var productcategoryleveltwo = db.ProductCategories.Where(x => x.ParentId == id);
+            var productcategoryleveltwo = await db.ProductCategories.Where(x => x.ParentId == id).ToListAsync();
             return View(productcategoryleveltwo);
 
             
         }
         [AllowAnonymous]
-        public IActionResult Showproducts(int id)
+        public async Task<IActionResult> Showproducts(int id)
         {
-            var Products = db.Products.Where(x => x.ProductCategoryId == id).Include(y => y.productcategory).ToList();
+            var Products = await db.Products.Where(x => x.ProductCategoryId == id).Include(y => y.productcategory).ToListAsync();
             return View(Products);
         }
         [HttpPost]
@@ -68,7 +70,7 @@ namespace MedAdvice.Areas.Customer.Controllers
         public async Task<IActionResult> AddtoPurchaseCart(int productid)
         {
             string userid = (await userManager.FindByNameAsync(User.Identity.Name)).Id;
-            Purchasecart purchasecart = db.Purchasecarts.FirstOrDefault(x => x.UserId == userid && x.isOpen == true);
+            Purchasecart purchasecart = await db.Purchasecarts.FirstOrDefaultAsync(x => x.UserId == userid && x.isOpen == true);
             if (purchasecart == null)
             {
                 purchasecart = new Purchasecart
@@ -78,10 +80,10 @@ namespace MedAdvice.Areas.Customer.Controllers
                     createdDate = DateTime.Now
                 };
                 db.Add(purchasecart);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
 
             }
-            if (db.purchaseCartItems.Any(x => x.PurchaseCartId == purchasecart.Id && x.ProductId == productid) == false)
+            if (await db.purchaseCartItems.AnyAsync(x => x.PurchaseCartId == purchasecart.Id && x.ProductId == productid) == false)
             {
                 PurchaseCartItem purchaseCartItem = new PurchaseCartItem
                 {
@@ -90,7 +92,7 @@ namespace MedAdvice.Areas.Customer.Controllers
                     PurchaseCartId = purchasecart.Id
                 };
                 db.Add(purchaseCartItem);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
             };
             return Json(true);
         }
@@ -99,21 +101,21 @@ namespace MedAdvice.Areas.Customer.Controllers
 
 
             string userid = (await userManager.FindByNameAsync(User.Identity.Name)).Id;
-            Purchasecart purchaseCart = db.Purchasecarts.Include(x => x.PurchaseCartItems).ThenInclude(x => x.Product)
+            Purchasecart purchaseCart = await db.Purchasecarts.Include(x => x.PurchaseCartItems).ThenInclude(x => x.Product)
                  .ThenInclude(x => x.productImages)
-                 .FirstOrDefault(x => x.UserId == userid && x.isOpen == true);
-            ViewData["totalprice"] = $"{PurchaseCartTotalPrice(purchaseCart.Id):0,0}";
+                 .FirstOrDefaultAsync(x => x.UserId == userid && x.isOpen == true);
+            ViewData["totalprice"] = $"{await PurchaseCartTotalPrice(purchaseCart.Id):0,0}";
 
             HttpContext.Session.SetInt32("purchaseCartId", purchaseCart.Id);
 
             return View(purchaseCart);
         }
         [NonAction]
-        public double PurchaseCartTotalPrice(int purchasecartid)
+        public async Task<double> PurchaseCartTotalPrice(int purchasecartid)
         {
-            var items = db.purchaseCartItems
+            var items = await db.purchaseCartItems
                 .Where(x => x.PurchaseCartId == purchasecartid)
-                 .Include(x => x.Product).ToList();
+                 .Include(x => x.Product).ToListAsync();
 
             double totalsum = items.Sum(x => x.count * x.Product.price);
             return totalsum;
@@ -141,12 +143,12 @@ namespace MedAdvice.Areas.Customer.Controllers
             else
             {
                 item.count = count;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return Json(
                     new
                     {
                         status = true,
-                        totalprice = $"{PurchaseCartTotalPrice(item.PurchaseCartId):0,0}"
+                        totalprice = $"{await PurchaseCartTotalPrice(item.PurchaseCartId):0,0}"
                     });
             }
         }
@@ -158,9 +160,9 @@ namespace MedAdvice.Areas.Customer.Controllers
             ApplicationUser user = await userManager.GetUserAsync(User);
             if (user == null)
                 return null;
-            return db.purchaseCartItems
+            return await db.purchaseCartItems
                 .Include(x => x.PurchaseCart)
-                .FirstOrDefault(x => x.Id == purchaseitemid
+                .FirstOrDefaultAsync(x => x.Id == purchaseitemid
                     && x.PurchaseCart.UserId == user.Id
                     && x.PurchaseCart.isOpen == true);
         }
@@ -181,12 +183,12 @@ namespace MedAdvice.Areas.Customer.Controllers
                 }
                 int purchaseCartId = item.PurchaseCartId;
                 db.purchaseCartItems.Remove(item);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return Json(
                     new
                     {
                         status = true,
-                        totalprice = $"{PurchaseCartTotalPrice(purchaseCartId):0,0}"
+                        totalprice = $"{await PurchaseCartTotalPrice(purchaseCartId):0,0}"
                     });
             }
             catch
@@ -199,9 +201,9 @@ namespace MedAdvice.Areas.Customer.Controllers
             }
         }
         [AllowAnonymous]
-        public IActionResult SearchProduct(string sname)
+        public async Task<IActionResult> SearchProduct(string sname)
         {
-            var sproducts = db.Products.Include(y=>y.productImages).Include(z=>z.productcategory). Where(x => x.englishname.Contains(sname) || x.descreption.Contains(sname)).ToList();
+            var sproducts = await db.Products.Include(y=>y.productImages).Include(z=>z.productcategory). Where(x => x.englishname.Contains(sname) || x.descreption.Contains(sname)).ToListAsync();
             return View(sproducts);
         }
     }

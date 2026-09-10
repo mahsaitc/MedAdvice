@@ -7,6 +7,7 @@ using MedAdvice.viewmodel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace MedAdvice.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertDrSpaciality(DoctorSpacialityViewModel Model)
+        public async Task<IActionResult> InsertDrSpaciality(DoctorSpacialityViewModel Model)
         {
             DoctorSpaciality doctorSpaciality = new DoctorSpaciality
             {
@@ -43,59 +44,61 @@ namespace MedAdvice.Areas.Admin.Controllers
 
             if (Model.DrSpacialityPicture == null)
             {
-                doctorSpaciality.DrSpacialityPicture = ImageUpload.ReadDefault(env, "doctor2.png");
-            }
-            else if (ImageUpload.TryRead(Model.DrSpacialityPicture, out byte[] picture, out string pictureError))
-            {
-                doctorSpaciality.DrSpacialityPicture = picture;
+                doctorSpaciality.DrSpacialityPicture = await ImageUpload.ReadDefaultAsync(env, "doctor2.png");
             }
             else
             {
-                TempData["msg"] = pictureError;
-                return View();
+                ImageReadResult picture = await ImageUpload.ReadAsync(Model.DrSpacialityPicture);
+                if (picture.Ok == false)
+                {
+                    TempData["msg"] = picture.Error;
+                    return View();
+                }
+                doctorSpaciality.DrSpacialityPicture = picture.Content;
             }
             db.Add(doctorSpaciality);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return View();
         }
         [HttpGet]
-        public IActionResult InsertDoctorProfile()
+        public async Task<IActionResult> InsertDoctorProfile()
         {
-            ViewData["doctorspacaiality"] = db.DoctorSpacialities.Where(x => x.DrSpacialityParentId == null).ToList();
+            ViewData["doctorspacaiality"] = await db.DoctorSpacialities.Where(x => x.DrSpacialityParentId == null).ToListAsync();
 
 
             return View();
 
         }
         [HttpGet]
-        public IActionResult GetCategories(int categoryid)
+        public async Task<IActionResult> GetCategories(int categoryid)
         {
-          List<DoctorSpaciality> doctorSpacialities= db.DoctorSpacialities.Where(x => x.DrSpacialityParentId==categoryid ).ToList();
+          List<DoctorSpaciality> doctorSpacialities= await db.DoctorSpacialities.Where(x => x.DrSpacialityParentId==categoryid ).ToListAsync();
             return Json(doctorSpacialities);
         }
       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertDoctorConfirm(DoctorViewModel model)
+        public async Task<IActionResult> InsertDoctorConfirm(DoctorViewModel model)
         {
-            if (ImageUpload.TryRead(model.DrProfileImage, out byte[] profile, out string profileError) == false)
+            ImageReadResult profileResult = await ImageUpload.ReadAsync(model.DrProfileImage);
+            if (profileResult.Ok == false)
             {
-                TempData["msg"] = profileError;
+                TempData["msg"] = profileResult.Error;
                 return RedirectToAction("InsertDoctorProfile", "Doctor");
             }
             Doctor doctor = model.ToEntity();
-            doctor.DrProfileImage = profile;
+            doctor.DrProfileImage = profileResult.Content;
             doctor.DrDetails = HtmlContentSanitizer.Sanitize(doctor.DrDetails);
             db.Add(doctor);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("InsertDrImage", "doctor", new { drid = doctor.Id });
 
 
         }
         [HttpGet]
-        public IActionResult InsertDrImage(int drid)
+        public async Task<IActionResult> InsertDrImage(int drid)
         {
-            Doctor doctor = db.Doctors.FirstOrDefault(x => x.Id == drid);
+            Doctor doctor = await db.Doctors.FirstOrDefaultAsync(x => x.Id == drid);
             ViewData["doctor"] = doctor;
             HttpContext.Session.SetInt32("drid" , doctor.Id);
             return View();
@@ -103,19 +106,20 @@ namespace MedAdvice.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertDoctortImageConfirm(DrImageViewModel model)
+        public async Task<IActionResult> InsertDoctortImageConfirm(DrImageViewModel model)
         {
             int drid = HttpContext.Session.GetInt32("drid").Value;
-            if (ImageUpload.TryRead(model.Doctorimg, out byte[] image, out string imageError) == false)
+            ImageReadResult imageResult = await ImageUpload.ReadAsync(model.Doctorimg);
+            if (imageResult.Ok == false)
             {
-                TempData["msg"] = imageError;
+                TempData["msg"] = imageResult.Error;
                 return RedirectToAction("InsertDrImage", "doctor", new { drid = drid });
             }
             DoctorImage doctorImage = model.ToEntity();
-            doctorImage.Doctorimg = image;
+            doctorImage.Doctorimg = imageResult.Content;
             doctorImage.DoctorId = drid;
             db.Add(doctorImage);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return RedirectToAction("InsertDrImage", "doctor", new { drid = drid });
         }

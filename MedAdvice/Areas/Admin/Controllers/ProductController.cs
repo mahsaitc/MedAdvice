@@ -24,40 +24,40 @@ namespace MedAdvice.Areas.Admin.Controllers
             db = _db;
         }
         [HttpGet]
-        public IActionResult InsertProduct()
+        public async Task<IActionResult> InsertProduct()
         {
-            ViewData["brands"] = db.Brands.ToList();
-            ViewData["productcategories"] = db.ProductCategories.Where(x => x.ParentId == null).ToList();
+            ViewData["brands"] = await db.Brands.ToListAsync();
+            ViewData["productcategories"] = await db.ProductCategories.Where(x => x.ParentId == null).ToListAsync();
 
             return View();
         }
         [HttpGet]
-        public IActionResult ShowProductByCategory()
+        public async Task<IActionResult> ShowProductByCategory()
         {
 
-            ViewData["productcategories"] = db.ProductCategories.Where(x => x.ParentId == null).ToList();
+            ViewData["productcategories"] = await db.ProductCategories.Where(x => x.ParentId == null).ToListAsync();
             return View();
         }
         [HttpGet]
-        public IActionResult GetProductByCategory(int categoryid)
+        public async Task<IActionResult> GetProductByCategory(int categoryid)
         {
-            ProductCategory productCategory = db.ProductCategories.Include(x => x.Products).FirstOrDefault(x => x.Id == categoryid);
+            ProductCategory productCategory = await db.ProductCategories.Include(x => x.Products).FirstOrDefaultAsync(x => x.Id == categoryid);
             return View(productCategory.Products.ToList());
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertProductconfirm(ProductViewModel model)
+        public async Task<IActionResult> InsertProductconfirm(ProductViewModel model)
         {
             Product product = model.ToEntity();
             db.Add(product);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("insertproductimage","product",new {productid=product.Id });
         }
         [HttpGet]
-        public IActionResult InsertProductImage(int ProductId)
+        public async Task<IActionResult> InsertProductImage(int ProductId)
         {
             //Session
-            Product product = db.Products.Include(x => x.Brand).FirstOrDefault(x => x.Id == ProductId);
+            Product product = await db.Products.Include(x => x.Brand).FirstOrDefaultAsync(x => x.Id == ProductId);
             ViewData["product"] = product;
             HttpContext.Session.SetInt32("productid", ProductId);
 
@@ -66,27 +66,28 @@ namespace MedAdvice.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertProductImageConfirm(ProductImageViewModel model)
+        public async Task<IActionResult> InsertProductImageConfirm(ProductImageViewModel model)
         {
             int productId = HttpContext.Session.GetInt32("productid").Value;
-            if (ImageUpload.TryRead(model.img, out byte[] image, out string imageError) == false)
+            ImageReadResult imageResult = await ImageUpload.ReadAsync(model.img);
+            if (imageResult.Ok == false)
             {
-                TempData["msg"] = imageError;
+                TempData["msg"] = imageResult.Error;
                 return RedirectToAction("InsertProductImage", "Product", new { productId = productId });
             }
             ProductImage productImage = model.ToEntity();
-            productImage.img = image;
+            productImage.img = imageResult.Content;
             productImage.ProductId = productId;
             db.Add(productImage);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return RedirectToAction("InsertProductImage", "Product", new { productId = productId });
         }
         [HttpGet]
-        public IActionResult GetCategories(int categoryId)
+        public async Task<IActionResult> GetCategories(int categoryId)
         {
-            List<ProductCategory> productCategories = db.ProductCategories.Where(x => x.ParentId == categoryId)
-                .ToList();
+            List<ProductCategory> productCategories = await db.ProductCategories.Where(x => x.ParentId == categoryId)
+                .ToListAsync();
             return Json(productCategories);
         }
         

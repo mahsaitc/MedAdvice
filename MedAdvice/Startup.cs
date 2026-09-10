@@ -42,6 +42,7 @@ namespace MedAdvice
                 x.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
                 x.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
             });
+            services.AddHttpClient();
             services.AddSingleton(typeof(CaptchaService));
 
         }
