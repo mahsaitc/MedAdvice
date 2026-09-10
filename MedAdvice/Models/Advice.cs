@@ -13,10 +13,9 @@ namespace MedAdvice.Models
         public string AdviceDate { get; set; }
         public string AdviceText { get; set; }
         public string AdviceBriefText { get; set; }
-        public AdviceCategory AdviceCategory { get; set; }
         public int AdviceCategoryId { get; set; }
         [ForeignKey("AdviceCategoryId")]
-        
+        public AdviceCategory AdviceCategory { get; set; }
         public byte[] AdviceHeaderImage { get; set; }
         public List<AdviceImage> AdviceImages { get; set; }
     }

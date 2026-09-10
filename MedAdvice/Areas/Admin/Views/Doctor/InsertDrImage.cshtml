@@ -22,6 +22,8 @@
     <div class="container">
         <form asp-area="admin" asp-controller="Doctor" asp-action="InsertDoctortImageConfirm"
               method="post" enctype="multipart/form-data">
+
+        <div asp-validation-summary="All" class="text-danger"></div>
             <div class="row">
                 <div class="col-md-6">
                     <label> نام</label>

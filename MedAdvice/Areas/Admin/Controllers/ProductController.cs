@@ -54,6 +54,12 @@ namespace MedAdvice.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> InsertProductconfirm(ProductViewModel model)
         {
+            if (ModelState.IsValid == false)
+            {
+                ViewData["brands"] = await db.Brands.ToListAsync();
+                ViewData["productcategories"] = await db.ProductCategories.Where(x => x.ParentId == null).ToListAsync();
+                return View("InsertProduct", model);
+            }
             Product product = model.ToEntity();
             db.Add(product);
             await db.SaveChangesAsync();
@@ -86,6 +92,11 @@ namespace MedAdvice.Areas.Admin.Controllers
                 return RedirectToAction("InsertProduct", "Product");
             }
             int productId = sessionProductId.Value;
+            if (ModelState.IsValid == false)
+            {
+                ViewData["product"] = await db.Products.Include(x => x.Brand).FirstOrDefaultAsync(x => x.Id == productId);
+                return View("insertproductimage", model);
+            }
             ImageReadResult imageResult = await ImageUpload.ReadAsync(model.img);
             if (imageResult.Ok == false)
             {

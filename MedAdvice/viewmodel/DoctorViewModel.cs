@@ -14,8 +14,8 @@ namespace MedAdvice.viewmodel
         public int MedicalCouncilNo { get; set; }
         [Required(ErrorMessage = "لطفا تاریخ تولد را وارد کنید")]
         public int DrBirthDate { get; set; }
-        [Required(ErrorMessage = "لطفا نام را وارد کنید")]
         public string CollaborationDate { get; set; }
+        [Required(ErrorMessage = "لطفا نام را وارد کنید")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "لطفا نام خانوادگی را وارد کنید")]
         public string FamillyName { get; set; }

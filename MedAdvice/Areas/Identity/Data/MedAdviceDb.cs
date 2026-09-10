@@ -28,7 +28,6 @@ namespace MedAdvice.Data
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<BlogImage> BlogImages { get; set; }
         public DbSet<BlogCategory> blogCategories { get; set; }
-        public DbSet<AdviceComment> AdviceComments{ get; set; }
 
 
         public DbSet<Product> Products { get; set; }
@@ -42,6 +41,10 @@ namespace MedAdvice.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            // Two DbSet properties used to map this type, so neither name won and EF fell
+            // back to the entity name for the table. Pin it so dropping the duplicate does
+            // not rename the existing table.
+            builder.Entity<AdviceComment>().ToTable("AdviceComment");
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);

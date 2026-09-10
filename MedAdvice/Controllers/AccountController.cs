@@ -34,6 +34,13 @@ namespace MedAdvice.Controllers
             return View();
         }
         public IActionResult SigninSignup() => View();
+        /// Flattens model validation errors for the shared TempData message channel.
+        /// These actions post from a shared partial and redirect, so ModelState itself
+        /// does not survive to the next request.
+        private string DescribeModelErrors()
+        {
+            return string.Join(" ", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
+        }
         private static string DescribeErrors(IdentityResult result)
         {
             return string.Join(" ", result.Errors.Select(x => x.Description));
@@ -42,6 +49,18 @@ namespace MedAdvice.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPasswordByPhoneNumberLevelTwo(ResetPasswordViewModel model)
         {
+            if (ModelState.IsValid == false)
+            {
+                TempData["msg"] = DescribeModelErrors();
+                return RedirectToAction("SignInSignUp", "Account");
+            }
+            // smstoken cannot carry [Required]: the email reset flow shares this view
+            // model and never supplies one.
+            if (string.IsNullOrWhiteSpace(model.smstoken))
+            {
+                TempData["msg"] = "please enter the code sent to your phone.";
+                return RedirectToAction("SignInSignUp", "Account");
+            }
             string id = HttpContext.Session.GetString("id");
             ApplicationUser user = id == null ? null : await userManager.FindByIdAsync(id);
             if (user == null)
@@ -145,6 +164,11 @@ namespace MedAdvice.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPasswordLevelThree(ResetPasswordViewModel model)
         {
+            if (ModelState.IsValid == false)
+            {
+                TempData["msg"] = DescribeModelErrors();
+                return RedirectToAction("SigninSignUp", "Account");
+            }
             string id = HttpContext.Session.GetString("id");
             string token = HttpContext.Session.GetString("token");
             ApplicationUser user = id == null ? null : await userManager.FindByIdAsync(id);
@@ -169,6 +193,11 @@ namespace MedAdvice.Controllers
             CaptchaServiceResult s = await captchaService.VerifyCaptchaAsync(this);
             if (s != CaptchaServiceResult.Human)
                 return RedirectToAction("SignInSignUp", "Account");
+            if (ModelState.IsValid == false)
+            {
+                TempData["msg"] = DescribeModelErrors();
+                return RedirectToAction("signinsignup");
+            }
             ApplicationUser user = await userManager.FindByNameAsync(model.username);
             if (user==null)
             {
@@ -214,6 +243,12 @@ namespace MedAdvice.Controllers
             CaptchaServiceResult s = await captchaService.VerifyCaptchaAsync(this);
             if (s != CaptchaServiceResult.Human)
                 return RedirectToAction("SignInSignUp", "Account");
+
+            if (ModelState.IsValid == false)
+            {
+                TempData["msg"] = DescribeModelErrors();
+                return RedirectToAction("SigninSignup", "account");
+            }
 
             ApplicationUser user = await userManager.FindByNameAsync(model.username);
             if (user!=null)

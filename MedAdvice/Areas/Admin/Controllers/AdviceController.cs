@@ -35,6 +35,10 @@ namespace MedAdvice.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> insertAdviceCategory(AdviceCategoryViewModel Model)
         {
+            if (ModelState.IsValid == false)
+            {
+                return View(Model);
+            }
             AdviceCategory adviceCategory = new AdviceCategory { 
                 AdviceCategoryname = Model.AdviceCategoryname,
                 AdviceCategoryParentId = Model.AdviceCategoryParentId
@@ -70,6 +74,11 @@ namespace MedAdvice.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> InsertAdviceConfirm(AdviceViewmodel model)
         {
+            if (ModelState.IsValid == false)
+            {
+                ViewData["AdviceCategory"] = await db.adviceCategories.Where(x => x.AdviceCategoryParentId == null).ToListAsync();
+                return View("InsertAdvice", model);
+            }
             Advice advice = new Advice
             {
                 AdviceBriefText = model.AdviceBriefText,
@@ -123,6 +132,11 @@ namespace MedAdvice.Areas.Admin.Controllers
                 return RedirectToAction("InsertAdvice", "Advice");
             }
             int AdviceId = sessionAdviceId.Value;
+            if (ModelState.IsValid == false)
+            {
+                ViewData["Advice"] = await db.FindAsync<Advice>(AdviceId);
+                return View("InsertAdviceImage", model);
+            }
             ImageReadResult imageResult = await ImageUpload.ReadAsync(model.AdviceImage);
             if (imageResult.Ok == false)
             {
