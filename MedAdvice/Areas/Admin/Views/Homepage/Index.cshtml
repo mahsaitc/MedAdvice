@@ -1,0 +1,101 @@
+﻿@model HomepageContentViewModel
+@{
+    ViewData["Title"] = "محتوای صفحه اصلی";
+}
+<style>
+    form {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+
+<div class="container">
+    <h1>محتوای صفحه اصلی</h1>
+
+    <form asp-area="admin" asp-controller="Homepage" asp-action="IndexConfirm" method="post" enctype="multipart/form-data">
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">بخش معرفی (بنر)</h3></div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>برچسب بالای عنوان</label>
+                        <input class="form-control" asp-for="HeroTagline" />
+                    </div>
+                    <div class="col-md-8">
+                        <label>عنوان اصلی</label>
+                        <input class="form-control" asp-for="HeroTitle" />
+                        <span asp-validation-for="HeroTitle"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>متن کوتاه</label>
+                        <textarea class="form-control" asp-for="HeroText" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>تصویر بنر</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" asp-for="HeroImage" />
+                                <label class="custom-file-label">انتخاب فایل تصویر</label>
+                            </div>
+                            <div class="input-group-append">
+                                <span class="input-group-text">Upload</span>
+                            </div>
+                        </div>
+                        @if (Model.HasHeroImage)
+                        {
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" asp-for="RemoveHeroImage" />
+                                <label class="form-check-label">حذف تصویر فعلی و بازگشت به تصویر پیش‌فرض قالب</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <p>در حال حاضر تصویر پیش‌فرض قالب نمایش داده می‌شود.</p>
+                        }
+                        <p>اگر فایلی انتخاب نکنید، تصویر فعلی حفظ می‌شود.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">اطلاعیه سراسری</h3></div>
+            <div class="card-body">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" asp-for="AnnouncementVisible" />
+                    <label class="form-check-label">نمایش اطلاعیه در تمام صفحات سایت</label>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>متن اطلاعیه</label>
+                        <textarea class="form-control" asp-for="AnnouncementText" rows="2"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>متن دکمه</label>
+                        <input class="form-control" asp-for="AnnouncementCtaText" />
+                    </div>
+                    <div class="col-md-6">
+                        <label>نشانی دکمه</label>
+                        <input class="form-control" asp-for="AnnouncementCtaUrl" placeholder="https://" />
+                        <span asp-validation-for="AnnouncementCtaUrl"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">ذخیره</button>
+    </form>
+</div>

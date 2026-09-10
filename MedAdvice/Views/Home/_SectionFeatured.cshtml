@@ -1,0 +1,27 @@
+﻿@model MedAdvice.viewmodel.HomepageViewModel
+<div class="services-area pt-100 pb-70">
+    <div class="container">
+        <div class="section-title-one">
+            <h2>@(string.IsNullOrWhiteSpace(Model.Content.HeroTagline) ? "Featured" : "Featured")</h2>
+        </div>
+        <div class="row">
+            @foreach (var article in Model.Featured)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="services-item">
+                        @if (article.Image != null && article.Image.Length > 0)
+                        {
+                            <img src="@($"data:image/jpeg;base64,{Convert.ToBase64String(article.Image)}")" alt="@article.Title">
+                        }
+                        <h3>
+                            <a asp-controller="@article.Controller" asp-action="@article.Action" asp-route-id="@article.RouteId">
+                                @article.Title
+                            </a>
+                        </h3>
+                        <p>@article.BriefText</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

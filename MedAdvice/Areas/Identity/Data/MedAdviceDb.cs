@@ -35,6 +35,10 @@ namespace MedAdvice.Data
         public DbSet<Brand> Brands { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
 
+        public DbSet<HomepageContent> HomepageContents { get; set; }
+        public DbSet<HomepageSection> HomepageSections { get; set; }
+        public DbSet<FeaturedArticle> FeaturedArticles { get; set; }
+
         public DbSet<ApplicationUser> users { get; set; }
         public DbSet<Purchasecart> Purchasecarts { get; set; }
         public DbSet<PurchaseCartItem> purchaseCartItems { get; set; }

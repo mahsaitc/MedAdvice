@@ -1,0 +1,118 @@
+﻿@model List<FeaturedArticle>
+@{
+    ViewData["Title"] = "مطالب منتخب صفحه اصلی";
+    var blogs = ViewData["blogs"] as List<Blog>;
+    var advices = ViewData["advices"] as List<Advice>;
+}
+<style>
+    form {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+
+<div class="container">
+    <h1>مطالب منتخب صفحه اصلی</h1>
+    <p>
+        این مطالب در بخش «منتخب» صفحه اصلی نمایش داده می‌شوند. توجه کنید که این بخش
+        به‌صورت پیش‌فرض غیرفعال است؛ برای نمایش آن به صفحه «بخش‌های صفحه اصلی» بروید.
+    </p>
+
+    <div class="card">
+        <div class="card-header"><h3 class="card-title">افزودن مطلب</h3></div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <form asp-area="admin" asp-controller="Homepage" asp-action="PinBlog" method="post">
+                        <label>افزودن از بلاگ</label>
+                        <select class="form-control" name="blogId">
+                            @if (blogs != null)
+                            {
+                                foreach (var blog in blogs)
+                                {
+                                    <option value="@blog.Id">@blog.BlogTitle</option>
+                                }
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-primary mt-2">افزودن</button>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <form asp-area="admin" asp-controller="Homepage" asp-action="PinAdvice" method="post">
+                        <label>افزودن از توصیه‌های پزشکی</label>
+                        <select class="form-control" name="adviceId">
+                            @if (advices != null)
+                            {
+                                foreach (var advice in advices)
+                                {
+                                    <option value="@advice.Id">@advice.AdviceTitle</option>
+                                }
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-primary mt-2">افزودن</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><h3 class="card-title">مطالب فعلی (@Model.Count)</h3></div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+                <thead>
+                    <tr>
+                        <th>ترتیب</th>
+                        <th>نوع</th>
+                        <th>عنوان</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count == 0)
+                    {
+                        <tr><td colspan="4">هنوز مطلبی انتخاب نشده است.</td></tr>
+                    }
+                    @foreach (var article in Model)
+                    {
+                        <tr>
+                            <td>@article.SortOrder</td>
+                            <td>@(article.BlogId != null ? "بلاگ" : "توصیه پزشکی")</td>
+                            <td>
+                                @if (article.Blog != null)
+                                {
+                                    @article.Blog.BlogTitle
+                                }
+                                else if (article.Advice != null)
+                                {
+                                    @article.Advice.AdviceTitle
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
+                            <td>
+                                <form asp-area="admin" asp-controller="Homepage" asp-action="MoveUp" method="post" style="display:inline">
+                                    <input type="hidden" name="id" value="@article.Id" />
+                                    <button type="submit" class="btn btn-sm btn-default">بالا</button>
+                                </form>
+                                <form asp-area="admin" asp-controller="Homepage" asp-action="MoveDown" method="post" style="display:inline">
+                                    <input type="hidden" name="id" value="@article.Id" />
+                                    <button type="submit" class="btn btn-sm btn-default">پایین</button>
+                                </form>
+                                <form asp-area="admin" asp-controller="Homepage" asp-action="Unpin" method="post" style="display:inline">
+                                    <input type="hidden" name="id" value="@article.Id" />
+                                    <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -207,9 +207,56 @@ namespace MedAdvice.Controllers
         {
             return View();
         }
-        public IActionResult Home()
+        public async Task<IActionResult> Home()
         {
-            return View();
+            HomepageContent content = await Db.HomepageContents.FirstOrDefaultAsync();
+            List<HomepageSection> sections = await Db.HomepageSections
+                .Where(x => x.IsVisible)
+                .OrderBy(x => x.SortOrder)
+                .ToListAsync();
+
+            List<FeaturedArticle> pinned = await Db.FeaturedArticles
+                .Include(x => x.Blog)
+                .Include(x => x.Advice)
+                .OrderBy(x => x.SortOrder)
+                .ToListAsync();
+
+            HomepageViewModel model = new HomepageViewModel
+            {
+                // An empty instance rather than null, so the partials bind without guards.
+                Content = content ?? new HomepageContent(),
+                Sections = sections
+            };
+
+            foreach (FeaturedArticle article in pinned)
+            {
+                if (article.Blog != null)
+                {
+                    model.Featured.Add(new FeaturedArticleViewModel
+                    {
+                        Title = article.Blog.BlogTitle,
+                        BriefText = article.Blog.BlogBriefText,
+                        Image = article.Blog.BlogHeaderImage,
+                        Controller = "home",
+                        Action = "BlogDetails",
+                        RouteId = article.Blog.Id
+                    });
+                }
+                else if (article.Advice != null)
+                {
+                    model.Featured.Add(new FeaturedArticleViewModel
+                    {
+                        Title = article.Advice.AdviceTitle,
+                        BriefText = article.Advice.AdviceBriefText,
+                        Image = article.Advice.AdviceHeaderImage,
+                        Controller = "home",
+                        Action = "ViewAdviceDetails",
+                        RouteId = article.Advice.Id
+                    });
+                }
+            }
+
+            return View(model);
         }
         class USD
         {
