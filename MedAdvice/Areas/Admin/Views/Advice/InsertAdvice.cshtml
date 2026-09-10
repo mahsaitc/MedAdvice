@@ -21,6 +21,8 @@
 </style>
 <div class="container">
     <form asp-area="Admin" asp-controller="Advice" asp-action="InsertAdviceConfirm" method="post" enctype="multipart/form-data">
+
+        <div asp-validation-summary="All" class="text-danger"></div>
         <div class="row">
             <div class="col-md-6">
                 <label> عنوان توصیه پزشکی</label>

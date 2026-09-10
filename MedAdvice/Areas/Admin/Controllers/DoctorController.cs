@@ -35,6 +35,10 @@ namespace MedAdvice.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> InsertDrSpaciality(DoctorSpacialityViewModel Model)
         {
+            if (ModelState.IsValid == false)
+            {
+                return View(Model);
+            }
             DoctorSpaciality doctorSpaciality = new DoctorSpaciality
             {
                 SpacialityTitle = Model.SpacialityTitle,
@@ -80,6 +84,11 @@ namespace MedAdvice.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> InsertDoctorConfirm(DoctorViewModel model)
         {
+            if (ModelState.IsValid == false)
+            {
+                ViewData["doctorspacaiality"] = await db.DoctorSpacialities.Where(x => x.DrSpacialityParentId == null).ToListAsync();
+                return View("InsertDoctorProfile", model);
+            }
             ImageReadResult profileResult = await ImageUpload.ReadAsync(model.DrProfileImage);
             if (profileResult.Ok == false)
             {
@@ -120,6 +129,11 @@ namespace MedAdvice.Areas.Admin.Controllers
                 return RedirectToAction("InsertDoctorProfile", "Doctor");
             }
             int drid = sessionDrId.Value;
+            if (ModelState.IsValid == false)
+            {
+                ViewData["doctor"] = await db.Doctors.FirstOrDefaultAsync(x => x.Id == drid);
+                return View("InsertDrImage", model);
+            }
             ImageReadResult imageResult = await ImageUpload.ReadAsync(model.Doctorimg);
             if (imageResult.Ok == false)
             {

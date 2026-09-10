@@ -35,6 +35,10 @@ namespace MedAdvice.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> insertblogCategory(BlogCategoryViewModel Model)
         {
+            if (ModelState.IsValid == false)
+            {
+                return View(Model);
+            }
             BlogCategory blogcategory = new BlogCategory
             {
                 BlogCategoryname = Model.BlogCategoryname,
@@ -77,6 +81,11 @@ namespace MedAdvice.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> InsertBlogConfirm(BlogViewModel model)
         {
+            if (ModelState.IsValid == false)
+            {
+                ViewData["BlogCategories"] = await db.blogCategories.Where(x => x.BlogCategoryParentId == null).ToListAsync();
+                return View("InsertBlogDetail", model);
+            }
             ImageReadResult headerResult = await ImageUpload.ReadAsync(model.BlogHeaderImage);
             if (headerResult.Ok == false)
             {
@@ -116,6 +125,11 @@ namespace MedAdvice.Areas.Admin.Controllers
                 return RedirectToAction("InsertBlogDetail", "Blog");
             }
             int blogid = sessionBlogId.Value;
+            if (ModelState.IsValid == false)
+            {
+                ViewData["blog"] = await db.Blogs.FirstOrDefaultAsync(x => x.Id == blogid);
+                return View("InsertBlogImage", model);
+            }
             ImageReadResult imageResult = await ImageUpload.ReadAsync(model.Blogimg);
             if (imageResult.Ok == false)
             {
