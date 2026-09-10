@@ -1,0 +1,137 @@
+﻿@model UserListViewModel
+@{
+    ViewData["Title"] = "فهرست کاربران";
+}
+<style>
+    .filter-box {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+
+<div class="container-fluid">
+    <h1>فهرست کاربران</h1>
+
+    <form asp-area="admin" asp-controller="User" asp-action="Index" method="get" class="filter-box">
+        <div class="row">
+            <div class="col-md-4">
+                <label>جستجو (نام کاربری، ایمیل، نام)</label>
+                <input class="form-control" name="q" value="@Model.Query" />
+            </div>
+            <div class="col-md-3">
+                <label>نقش</label>
+                <select class="form-control" name="role">
+                    <option value="">همه نقش‌ها</option>
+                    @foreach (var role in Model.AvailableRoles)
+                    {
+                        if (role == Model.Role)
+                        {
+                            <option value="@role" selected>@role</option>
+                        }
+                        else
+                        {
+                            <option value="@role">@role</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label>وضعیت</label>
+                <select class="form-control" name="status">
+                    <option value="" selected="@(string.IsNullOrEmpty(Model.Status))">همه</option>
+                    <option value="active" selected="@(Model.Status == "active")">فعال</option>
+                    <option value="deactivated" selected="@(Model.Status == "deactivated")">غیرفعال</option>
+                    <option value="lockedout" selected="@(Model.Status == "lockedout")">قفل موقت</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label>&nbsp;</label>
+                <button type="submit" class="btn btn-primary btn-block">اعمال فیلتر</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">@Model.TotalCount کاربر یافت شد</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+                <thead>
+                    <tr>
+                        <th>نام کاربری</th>
+                        <th>نام و نام خانوادگی</th>
+                        <th>ایمیل</th>
+                        <th>موبایل</th>
+                        <th>نقش‌ها</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Users.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="7">کاربری با این مشخصات پیدا نشد.</td>
+                        </tr>
+                    }
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td>@user.UserName</td>
+                            <td>@user.FullName</td>
+                            <td>@user.Email</td>
+                            <td>@user.PhoneNumber</td>
+                            <td>
+                                @foreach (var role in user.Roles)
+                                {
+                                    <span class="badge badge-info">@role</span>
+                                }
+                            </td>
+                            <td>
+                                @if (user.IsDeactivated)
+                                {
+                                    <span class="badge badge-danger">غیرفعال</span>
+                                }
+                                else if (user.IsTemporarilyLockedOut)
+                                {
+                                    <span class="badge badge-warning">قفل موقت</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-success">فعال</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-area="admin" asp-controller="User" asp-action="Details" asp-route-id="@user.Id"
+                                   class="btn btn-sm btn-info">مشاهده</a>
+                                <a asp-area="admin" asp-controller="User" asp-action="Edit" asp-route-id="@user.Id"
+                                   class="btn btn-sm btn-primary">ویرایش</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (Model.TotalPages > 1)
+        {
+            <div class="card-footer">
+                <ul class="pagination pagination-sm m-0 float-left">
+                    @for (int p = 1; p <= Model.TotalPages; p++)
+                    {
+                        <li class="page-item @(p == Model.Page ? "active" : "")">
+                            <a class="page-link"
+                               asp-area="admin" asp-controller="User" asp-action="Index"
+                               asp-route-q="@Model.Query" asp-route-role="@Model.Role"
+                               asp-route-status="@Model.Status" asp-route-page="@p">@p</a>
+                        </li>
+                    }
+                </ul>
+                <span class="float-right">صفحه @Model.Page از @Model.TotalPages</span>
+            </div>
+        }
+    </div>
+</div>

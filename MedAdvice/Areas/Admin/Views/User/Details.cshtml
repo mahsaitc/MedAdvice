@@ -1,0 +1,132 @@
+﻿@model UserDetailsViewModel
+@{
+    ViewData["Title"] = "مشخصات کاربر";
+}
+<style>
+    label {
+        color: green
+    }
+</style>
+
+<div class="container-fluid">
+    <h1>مشخصات کاربر</h1>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">پروفایل</h3></div>
+                <div class="card-body">
+                    <p><label>نام کاربری:</label> @Model.User.UserName</p>
+                    <p><label>نام و نام خانوادگی:</label> @Model.User.firstname @Model.User.lastname</p>
+                    <p><label>ایمیل:</label> @Model.User.Email (@(Model.User.EmailConfirmed ? "تایید شده" : "تایید نشده"))</p>
+                    <p><label>موبایل:</label> @Model.User.PhoneNumber (@(Model.User.PhoneNumberConfirmed ? "تایید شده" : "تایید نشده"))</p>
+                    <p>
+                        <label>نقش‌ها:</label>
+                        @foreach (var role in Model.Roles)
+                        {
+                            <span class="badge badge-info">@role</span>
+                        }
+                    </p>
+                    <p>
+                        <label>وضعیت:</label>
+                        @if (Model.IsDeactivated)
+                        {
+                            <span class="badge badge-danger">غیرفعال</span>
+                        }
+                        else if (Model.IsTemporarilyLockedOut)
+                        {
+                            <span class="badge badge-warning">قفل موقت تا @Model.User.LockoutEnd</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-success">فعال</span>
+                        }
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a asp-area="admin" asp-controller="User" asp-action="Edit" asp-route-id="@Model.User.Id"
+                       class="btn btn-primary">ویرایش</a>
+                    <a asp-area="admin" asp-controller="User" asp-action="ResetPassword" asp-route-id="@Model.User.Id"
+                       class="btn btn-warning">تغییر رمز عبور</a>
+
+                    @if (Model.IsDeactivated)
+                    {
+                        <form asp-area="admin" asp-controller="User" asp-action="Activate" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@Model.User.Id" />
+                            <button type="submit" class="btn btn-success">فعال کردن</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-area="admin" asp-controller="User" asp-action="Deactivate" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@Model.User.Id" />
+                            <button type="submit" class="btn btn-secondary">غیرفعال کردن</button>
+                        </form>
+                    }
+
+                    <a asp-area="admin" asp-controller="User" asp-action="Delete" asp-route-id="@Model.User.Id"
+                       class="btn btn-danger">حذف</a>
+                    <a asp-area="admin" asp-controller="User" asp-action="Index" class="btn btn-default">بازگشت</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">فعالیت</h3></div>
+                <div class="card-body">
+                    <p><label>تعداد سبدهای خرید:</label> @Model.CartCount</p>
+                    <p><label>تعداد دیدگاه‌ها:</label> @Model.CommentCount</p>
+
+                    <h4>آخرین سبدهای خرید</h4>
+                    @if (Model.RecentCarts.Count == 0)
+                    {
+                        <p>سبد خریدی ثبت نشده است.</p>
+                    }
+                    else
+                    {
+                        <table class="table table-sm">
+                            <thead>
+                                <tr><th>شناسه</th><th>تاریخ</th><th>تعداد اقلام</th><th>وضعیت</th></tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var cart in Model.RecentCarts)
+                                {
+                                    <tr>
+                                        <td>@cart.Id</td>
+                                        <td>@cart.createdDate.ToString("yyyy/MM/dd")</td>
+                                        <td>@(cart.PurchaseCartItems == null ? 0 : cart.PurchaseCartItems.Count)</td>
+                                        <td>@(cart.isOpen ? "باز" : "بسته")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+
+                    <h4>آخرین دیدگاه‌ها</h4>
+                    @if (Model.RecentComments.Count == 0)
+                    {
+                        <p>دیدگاهی ثبت نشده است.</p>
+                    }
+                    else
+                    {
+                        <table class="table table-sm">
+                            <thead>
+                                <tr><th>توصیه</th><th>متن</th></tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var comment in Model.RecentComments)
+                                {
+                                    <tr>
+                                        <td>@(comment.Advice == null ? "-" : comment.Advice.AdviceTitle)</td>
+                                        <td>@comment.comment</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

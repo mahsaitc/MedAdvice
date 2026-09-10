@@ -1,0 +1,102 @@
+﻿@model UserEditViewModel
+@{
+    ViewData["Title"] = "ویرایش کاربر";
+}
+<style>
+    form {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+
+<div class="container">
+    <h1>ویرایش کاربر</h1>
+
+    <form asp-area="admin" asp-controller="User" asp-action="EditConfirm" method="post">
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="row">
+            <div class="col-md-6">
+                <label>نام کاربری (قابل تغییر نیست)</label>
+                <input class="form-control" value="@Model.UserName" readonly />
+            </div>
+            <div class="col-md-6">
+                <label>ایمیل</label>
+                <input class="form-control" asp-for="Email" />
+                <span asp-validation-for="Email"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label>نام</label>
+                <input class="form-control" asp-for="firstname" />
+                <span asp-validation-for="firstname"></span>
+            </div>
+            <div class="col-md-6">
+                <label>نام خانوادگی</label>
+                <input class="form-control" asp-for="lastname" />
+                <span asp-validation-for="lastname"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label>شماره موبایل</label>
+                <input class="form-control" asp-for="PhoneNumber" />
+            </div>
+            <div class="col-md-6">
+                <label>تاییدها</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" asp-for="EmailConfirmed" />
+                    <label class="form-check-label">ایمیل تایید شده</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" asp-for="PhoneNumberConfirmed" />
+                    <label class="form-check-label">موبایل تایید شده</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <label>نقش‌ها</label>
+                @if (Model.IsSelf || Model.IsLastAdmin)
+                {
+                    <p class="text-danger">
+                        @(Model.IsSelf
+                            ? "نقش مدیر حساب خودتان قابل حذف نیست."
+                            : "این تنها حساب مدیر است و نقش مدیر آن قابل حذف نیست.")
+                    </p>
+                }
+                @foreach (var role in Model.AllRoles)
+                {
+                    var isChecked = Model.SelectedRoles != null && Model.SelectedRoles.Contains(role);
+                    var isProtectedAdminRole = role == "admins" && isChecked && (Model.IsSelf || Model.IsLastAdmin);
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="SelectedRoles" value="@role"
+                               checked="@isChecked" disabled="@isProtectedAdminRole" />
+                        <label class="form-check-label">@role</label>
+                        @if (isProtectedAdminRole)
+                        {
+                            <input type="hidden" name="SelectedRoles" value="@role" />
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">ذخیره</button>
+                <a asp-area="admin" asp-controller="User" asp-action="Details" asp-route-id="@Model.Id"
+                   class="btn btn-default">انصراف</a>
+            </div>
+        </div>
+    </form>
+</div>
