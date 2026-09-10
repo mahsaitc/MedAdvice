@@ -43,7 +43,12 @@ namespace MedAdvice.Controllers
         public async Task<IActionResult> ResetPasswordByPhoneNumberLevelTwo(ResetPasswordViewModel model)
         {
             string id = HttpContext.Session.GetString("id");
-            ApplicationUser user = await userManager.FindByIdAsync(id);
+            ApplicationUser user = id == null ? null : await userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                TempData["msg"] = "your session has expired. please start again.";
+                return RedirectToAction("SignInSignUp", "Account");
+            }
             if (user.tokenExpirationTime < DateTime.Now)
             {
                 TempData["msg"] = "your token is expired.please send new token!";
@@ -142,7 +147,12 @@ namespace MedAdvice.Controllers
         {
             string id = HttpContext.Session.GetString("id");
             string token = HttpContext.Session.GetString("token");
-            ApplicationUser user = await userManager.FindByIdAsync(id);
+            ApplicationUser user = id == null ? null : await userManager.FindByIdAsync(id);
+            if (user == null || token == null)
+            {
+                TempData["msg"] = "your session has expired. please start again.";
+                return RedirectToAction("SigninSignUp", "Account");
+            }
             var result = await userManager.ResetPasswordAsync(user, token, model.password);
             if (result.Succeeded)
                 TempData["msg"] = "your password has been changed successfully";
