@@ -1,0 +1,57 @@
+﻿@model HomepageSectionsViewModel
+@{
+    ViewData["Title"] = "بخش‌های صفحه اصلی";
+}
+<style>
+    form {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+
+<div class="container">
+    <h1>بخش‌های صفحه اصلی</h1>
+    <p>با برداشتن تیک، بخش از صفحه اصلی حذف می‌شود. ترتیب نمایش بر اساس عدد ستون ترتیب است.</p>
+
+    <form asp-area="admin" asp-controller="Homepage" asp-action="SectionsConfirm" method="post">
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>بخش</th>
+                    <th>کلید</th>
+                    <th>نمایش</th>
+                    <th>ترتیب</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Sections.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Model.Sections[i].DisplayName
+                            <input type="hidden" asp-for="Sections[i].Id" />
+                            <input type="hidden" asp-for="Sections[i].SectionKey" />
+                            <input type="hidden" asp-for="Sections[i].DisplayName" />
+                        </td>
+                        <td>@Model.Sections[i].SectionKey</td>
+                        <td>
+                            <input class="form-check-input" type="checkbox" asp-for="Sections[i].IsVisible" />
+                        </td>
+                        <td>
+                            <input class="form-control" type="number" asp-for="Sections[i].SortOrder" />
+                            <span asp-validation-for="Sections[i].SortOrder"></span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-primary">ذخیره</button>
+    </form>
+</div>
