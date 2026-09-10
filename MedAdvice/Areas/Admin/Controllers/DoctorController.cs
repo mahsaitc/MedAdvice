@@ -1,7 +1,8 @@
-﻿using AutoMapper;
-using MedAdvice.Data;
+﻿using MedAdvice.Data;
 using MedAdvice.Models;
 using MedAdvice.Services;
+using MedAdvice.mapper;
+using Microsoft.AspNetCore.Hosting;
 using MedAdvice.viewmodel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,9 +19,11 @@ namespace MedAdvice.Areas.Admin.Controllers
     public class DoctorController : Controller
     {
         MedAdviceDb db;
-        public DoctorController(MedAdviceDb _db)
+        IWebHostEnvironment env;
+        public DoctorController(MedAdviceDb _db, IWebHostEnvironment _env)
         {
             db = _db;
+            env = _env;
         }
         [HttpGet]
         public IActionResult InsertDrSpaciality()
@@ -38,23 +41,18 @@ namespace MedAdvice.Areas.Admin.Controllers
                
             };
 
-            if (Model.DrSpacialityPicture != null)
+            if (Model.DrSpacialityPicture == null)
             {
-                if (Model.DrSpacialityPicture.Length <= 5 * Math.Pow(1024, 2))
-                {
-                    string extension = System.IO.Path.GetExtension(Model.DrSpacialityPicture.FileName.ToLower());
-                    if (extension == ".jpeg" || extension == ".png" || extension == ".jpg")
-                    {
-                        byte[] b = new byte[Model.DrSpacialityPicture.Length];
-                       Model.DrSpacialityPicture.OpenReadStream().Read(b, 0, b.Length);
-                        doctorSpaciality.DrSpacialityPicture = b;
-                    }
-                }
+                doctorSpaciality.DrSpacialityPicture = ImageUpload.ReadDefault(env, "doctor2.png");
+            }
+            else if (ImageUpload.TryRead(Model.DrSpacialityPicture, out byte[] picture, out string pictureError))
+            {
+                doctorSpaciality.DrSpacialityPicture = picture;
             }
             else
             {
-                byte[] ax = System.IO.File.ReadAllBytes("doctor2.png");
-                doctorSpaciality.DrSpacialityPicture = ax;
+                TempData["msg"] = pictureError;
+                return View();
             }
             db.Add(doctorSpaciality);
             db.SaveChanges();
@@ -78,9 +76,15 @@ namespace MedAdvice.Areas.Admin.Controllers
       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertDoctorConfirm([FromServices] IMapper mapper, DoctorViewModel model)
+        public IActionResult InsertDoctorConfirm(DoctorViewModel model)
         {
-            Doctor doctor = mapper.Map<Doctor>(model);
+            if (ImageUpload.TryRead(model.DrProfileImage, out byte[] profile, out string profileError) == false)
+            {
+                TempData["msg"] = profileError;
+                return RedirectToAction("InsertDoctorProfile", "Doctor");
+            }
+            Doctor doctor = model.ToEntity();
+            doctor.DrProfileImage = profile;
             doctor.DrDetails = HtmlContentSanitizer.Sanitize(doctor.DrDetails);
             db.Add(doctor);
             db.SaveChanges();
@@ -99,10 +103,16 @@ namespace MedAdvice.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertDoctortImageConfirm(DrImageViewModel model, [FromServices] IMapper mapper)
+        public IActionResult InsertDoctortImageConfirm(DrImageViewModel model)
         {
-            DoctorImage doctorImage = mapper.Map<DoctorImage>(model);
             int drid = HttpContext.Session.GetInt32("drid").Value;
+            if (ImageUpload.TryRead(model.Doctorimg, out byte[] image, out string imageError) == false)
+            {
+                TempData["msg"] = imageError;
+                return RedirectToAction("InsertDrImage", "doctor", new { drid = drid });
+            }
+            DoctorImage doctorImage = model.ToEntity();
+            doctorImage.Doctorimg = image;
             doctorImage.DoctorId = drid;
             db.Add(doctorImage);
             db.SaveChanges();

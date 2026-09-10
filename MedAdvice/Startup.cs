@@ -1,6 +1,4 @@
-using AutoMapper;
 using MedAdvice.Areas.Identity.Data;
-using MedAdvice.mapper;
 using MedAdvice.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,9 +35,6 @@ namespace MedAdvice
                 x.Secure = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
             });
 
-           var mapperconfig= new MapperConfiguration(x => x.AddProfile(new MyWebsiteMapperProfil()));
-            IMapper mapper = mapperconfig.CreateMapper();
-            services.AddSingleton(mapper);
             services.AddSession(x =>
             {
                 x.Cookie.HttpOnly = true;
