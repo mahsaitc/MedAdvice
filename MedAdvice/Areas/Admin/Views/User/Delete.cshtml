@@ -1,0 +1,58 @@
+﻿@model UserDetailsViewModel
+@{
+    ViewData["Title"] = "حذف کاربر";
+}
+<style>
+    form {
+        padding: 20px;
+    }
+
+    label {
+        color: green
+    }
+</style>
+
+<div class="container">
+    <h1>حذف کاربر</h1>
+
+    <div class="card card-danger">
+        <div class="card-header">
+            <h3 class="card-title">این عملیات قابل بازگشت نیست</h3>
+        </div>
+        <div class="card-body">
+            <p><label>نام کاربری:</label> @Model.User.UserName</p>
+            <p><label>نام و نام خانوادگی:</label> @Model.User.firstname @Model.User.lastname</p>
+            <p><label>ایمیل:</label> @Model.User.Email</p>
+            <p>
+                <label>نقش‌ها:</label>
+                @foreach (var role in Model.Roles)
+                {
+                    <span class="badge badge-info">@role</span>
+                }
+            </p>
+
+            <hr />
+
+            <h4>با حذف این کاربر چه اتفاقی می‌افتد</h4>
+            <ul>
+                <li>
+                    <strong>@Model.CommentCount</strong> دیدگاه از این کاربر جدا می‌شود و
+                    به‌صورت دیدگاه مهمان باقی می‌ماند (نام و ایمیل ثبت‌شده در خود دیدگاه حفظ می‌شود).
+                </li>
+                <li>
+                    <strong>@Model.CartCount</strong> سبد خرید به همراه اقلام آن‌ها حذف می‌شود.
+                </li>
+                <li>حساب کاربری و نقش‌های آن حذف می‌شود.</li>
+            </ul>
+            <p>اگر قصد دارید فقط دسترسی کاربر را ببندید، به‌جای حذف از گزینه «غیرفعال کردن» استفاده کنید.</p>
+        </div>
+        <div class="card-footer">
+            <form asp-area="admin" asp-controller="User" asp-action="DeleteConfirm" method="post" style="display:inline">
+                <input type="hidden" name="id" value="@Model.User.Id" />
+                <button type="submit" class="btn btn-danger">بله، این کاربر حذف شود</button>
+            </form>
+            <a asp-area="admin" asp-controller="User" asp-action="Details" asp-route-id="@Model.User.Id"
+               class="btn btn-default">انصراف</a>
+        </div>
+    </div>
+</div>
