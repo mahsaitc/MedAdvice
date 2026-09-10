@@ -1,5 +1,6 @@
 ﻿using MedAdvice.Data;
 using MedAdvice.Models;
+using MedAdvice.Services;
 using MedAdvice.viewmodel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
+using MedAdvice.mapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 
@@ -45,10 +46,9 @@ namespace MedAdvice.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertProductconfirm(ProductViewModel model,[FromServices]IMapper mapper)
+        public IActionResult InsertProductconfirm(ProductViewModel model)
         {
-            //automapper
-            Product product = mapper.Map<Product>(model);
+            Product product = model.ToEntity();
             db.Add(product);
             db.SaveChanges();
             return RedirectToAction("insertproductimage","product",new {productid=product.Id });
@@ -66,10 +66,16 @@ namespace MedAdvice.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertProductImageConfirm(ProductImageViewModel model, [FromServices] IMapper mapper)
+        public IActionResult InsertProductImageConfirm(ProductImageViewModel model)
         {
-            ProductImage productImage = mapper.Map<ProductImage>(model);
             int productId = HttpContext.Session.GetInt32("productid").Value;
+            if (ImageUpload.TryRead(model.img, out byte[] image, out string imageError) == false)
+            {
+                TempData["msg"] = imageError;
+                return RedirectToAction("InsertProductImage", "Product", new { productId = productId });
+            }
+            ProductImage productImage = model.ToEntity();
+            productImage.img = image;
             productImage.ProductId = productId;
             db.Add(productImage);
             db.SaveChanges();

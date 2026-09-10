@@ -1,7 +1,8 @@
-﻿using AutoMapper;
-using MedAdvice.Data;
+﻿using MedAdvice.Data;
 using MedAdvice.Models;
 using MedAdvice.Services;
+using MedAdvice.mapper;
+using Microsoft.AspNetCore.Hosting;
 using MedAdvice.viewmodel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,9 +19,11 @@ namespace MedAdvice.Areas.Admin.Controllers
     public class AdviceController : Controller
     {
         MedAdviceDb db;
-        public AdviceController(MedAdviceDb _db)
+        IWebHostEnvironment env;
+        public AdviceController(MedAdviceDb _db, IWebHostEnvironment _env)
         {
             db = _db;
+            env = _env;
         }
         [HttpGet]
         public IActionResult insertAdviceCategory()
@@ -37,23 +40,18 @@ namespace MedAdvice.Areas.Admin.Controllers
 
             };
 
-            if (Model.AdviceCategoryPicture != null)
+            if (Model.AdviceCategoryPicture == null)
             {
-                if (Model.AdviceCategoryPicture.Length <= 5 * Math.Pow(1024, 2))
-                {
-                    string extension = System.IO.Path.GetExtension(Model.AdviceCategoryPicture.FileName.ToLower());
-                    if (extension == ".jpeg" || extension == ".png" || extension == ".jpg")
-                    {
-                        byte[] b = new byte[Model.AdviceCategoryPicture.Length];
-                        Model.AdviceCategoryPicture.OpenReadStream().Read(b, 0, b.Length);
-                        adviceCategory.AdviceCategoryPicture = b;
-                    }
-                }
+                adviceCategory.AdviceCategoryPicture = ImageUpload.ReadDefault(env, "advicetextheader.jpg");
+            }
+            else if (ImageUpload.TryRead(Model.AdviceCategoryPicture, out byte[] picture, out string pictureError))
+            {
+                adviceCategory.AdviceCategoryPicture = picture;
             }
             else
             {
-                byte[] ax = System.IO.File.ReadAllBytes("advicetextheader.jpg");
-                adviceCategory.AdviceCategoryPicture = ax;
+                TempData["msg"] = pictureError;
+                return View();
             }
             db.Add(adviceCategory);
             db.SaveChanges();
@@ -80,23 +78,18 @@ namespace MedAdvice.Areas.Admin.Controllers
 
             };
            
-            if (model.AdviceHeaderImage != null)
+            if (model.AdviceHeaderImage == null)
             {
-                if (model.AdviceHeaderImage.Length <= 5 * Math.Pow(1024, 2))
-                {
-                    string extension = System.IO.Path.GetExtension(model.AdviceHeaderImage.FileName.ToLower());
-                    if (extension == ".jpeg" || extension == ".png" || extension == ".jpg")
-                    {
-                        byte[] b = new byte[model.AdviceHeaderImage.Length];
-                        model.AdviceHeaderImage.OpenReadStream().Read(b, 0, b.Length);
-                        advice.AdviceHeaderImage = b;
-                    }
-                }
+                advice.AdviceHeaderImage = ImageUpload.ReadDefault(env, "advicetextheader.jpg");
+            }
+            else if (ImageUpload.TryRead(model.AdviceHeaderImage, out byte[] header, out string headerError))
+            {
+                advice.AdviceHeaderImage = header;
             }
             else
             {
-                byte[] ax = System.IO.File.ReadAllBytes("advicetextheader.jpg");
-                advice.AdviceHeaderImage = ax;
+                TempData["msg"] = headerError;
+                return RedirectToAction("InsertAdvice", "Advice");
             }
             db.Add(advice);
             db.SaveChanges();
@@ -113,10 +106,16 @@ namespace MedAdvice.Areas.Admin.Controllers
         }
       [HttpPost]
       [ValidateAntiForgeryToken]
-      public IActionResult InsertAdviceImageConfirm(AdviceImageViewModel model, [FromServices] IMapper mapper)
+      public IActionResult InsertAdviceImageConfirm(AdviceImageViewModel model)
         {
-            AdviceImage adviceImage = mapper.Map<AdviceImage>(model);
             int AdviceId = HttpContext.Session.GetInt32("AdviceId").Value;
+            if (ImageUpload.TryRead(model.AdviceImage, out byte[] image, out string imageError) == false)
+            {
+                TempData["msg"] = imageError;
+                return RedirectToAction("InsertAdviceImage", "Advice", new { AdviceId = AdviceId });
+            }
+            AdviceImage adviceImage = model.ToEntity();
+            adviceImage.Adviceimg = image;
             adviceImage.AdviceId = AdviceId;
 
 
