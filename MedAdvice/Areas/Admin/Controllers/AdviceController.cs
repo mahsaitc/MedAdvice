@@ -7,6 +7,7 @@ using MedAdvice.viewmodel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace MedAdvice.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult insertAdviceCategory(AdviceCategoryViewModel Model)
+        public async Task<IActionResult> insertAdviceCategory(AdviceCategoryViewModel Model)
         {
             AdviceCategory adviceCategory = new AdviceCategory { 
                 AdviceCategoryname = Model.AdviceCategoryname,
@@ -42,31 +43,32 @@ namespace MedAdvice.Areas.Admin.Controllers
 
             if (Model.AdviceCategoryPicture == null)
             {
-                adviceCategory.AdviceCategoryPicture = ImageUpload.ReadDefault(env, "advicetextheader.jpg");
-            }
-            else if (ImageUpload.TryRead(Model.AdviceCategoryPicture, out byte[] picture, out string pictureError))
-            {
-                adviceCategory.AdviceCategoryPicture = picture;
+                adviceCategory.AdviceCategoryPicture = await ImageUpload.ReadDefaultAsync(env, "advicetextheader.jpg");
             }
             else
             {
-                TempData["msg"] = pictureError;
-                return View();
+                ImageReadResult picture = await ImageUpload.ReadAsync(Model.AdviceCategoryPicture);
+                if (picture.Ok == false)
+                {
+                    TempData["msg"] = picture.Error;
+                    return View();
+                }
+                adviceCategory.AdviceCategoryPicture = picture.Content;
             }
             db.Add(adviceCategory);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return View();
         }
         [HttpGet]
-        public IActionResult InsertAdvice()
+        public async Task<IActionResult> InsertAdvice()
         {
-            ViewData["AdviceCategory"] = db.adviceCategories.Where(x => x.AdviceCategoryParentId == null).ToList();
+            ViewData["AdviceCategory"] = await db.adviceCategories.Where(x => x.AdviceCategoryParentId == null).ToListAsync();
            
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertAdviceConfirm(AdviceViewmodel model)
+        public async Task<IActionResult> InsertAdviceConfirm(AdviceViewmodel model)
         {
             Advice advice = new Advice
             {
@@ -80,25 +82,26 @@ namespace MedAdvice.Areas.Admin.Controllers
            
             if (model.AdviceHeaderImage == null)
             {
-                advice.AdviceHeaderImage = ImageUpload.ReadDefault(env, "advicetextheader.jpg");
-            }
-            else if (ImageUpload.TryRead(model.AdviceHeaderImage, out byte[] header, out string headerError))
-            {
-                advice.AdviceHeaderImage = header;
+                advice.AdviceHeaderImage = await ImageUpload.ReadDefaultAsync(env, "advicetextheader.jpg");
             }
             else
             {
-                TempData["msg"] = headerError;
-                return RedirectToAction("InsertAdvice", "Advice");
+                ImageReadResult header = await ImageUpload.ReadAsync(model.AdviceHeaderImage);
+                if (header.Ok == false)
+                {
+                    TempData["msg"] = header.Error;
+                    return RedirectToAction("InsertAdvice", "Advice");
+                }
+                advice.AdviceHeaderImage = header.Content;
             }
             db.Add(advice);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("InsertAdviceImage","Advice",new {AdviceId=advice.Id }   );
         }
         [HttpGet]
-        public IActionResult InsertAdviceImage(int AdviceId)
+        public async Task<IActionResult> InsertAdviceImage(int AdviceId)
         {
-            Advice advice = db.Find<Advice>(AdviceId);
+            Advice advice = await db.FindAsync<Advice>(AdviceId);
             ViewData["Advice"] = advice;
 
             HttpContext.Session.SetInt32("AdviceId", AdviceId);
@@ -106,30 +109,31 @@ namespace MedAdvice.Areas.Admin.Controllers
         }
       [HttpPost]
       [ValidateAntiForgeryToken]
-      public IActionResult InsertAdviceImageConfirm(AdviceImageViewModel model)
+      public async Task<IActionResult> InsertAdviceImageConfirm(AdviceImageViewModel model)
         {
             int AdviceId = HttpContext.Session.GetInt32("AdviceId").Value;
-            if (ImageUpload.TryRead(model.AdviceImage, out byte[] image, out string imageError) == false)
+            ImageReadResult imageResult = await ImageUpload.ReadAsync(model.AdviceImage);
+            if (imageResult.Ok == false)
             {
-                TempData["msg"] = imageError;
+                TempData["msg"] = imageResult.Error;
                 return RedirectToAction("InsertAdviceImage", "Advice", new { AdviceId = AdviceId });
             }
             AdviceImage adviceImage = model.ToEntity();
-            adviceImage.Adviceimg = image;
+            adviceImage.Adviceimg = imageResult.Content;
             adviceImage.AdviceId = AdviceId;
 
 
 
             db.Add(adviceImage);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             return RedirectToAction("InsertAdviceImage", "Advice", new { AdviceId = AdviceId });
         }
         
         [HttpGet]
-        public IActionResult GetAdviceCategories(int AdvCategoryId)
+        public async Task<IActionResult> GetAdviceCategories(int AdvCategoryId)
         {
-            List<AdviceCategory> AdviceCategories = db.adviceCategories.Where(x => x.AdviceCategoryParentId == AdvCategoryId).ToList();
+            List<AdviceCategory> AdviceCategories = await db.adviceCategories.Where(x => x.AdviceCategoryParentId == AdvCategoryId).ToListAsync();
             return Json(AdviceCategories);
         }
     }

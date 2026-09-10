@@ -7,6 +7,7 @@ using MedAdvice.viewmodel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace MedAdvice.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult insertblogCategory(BlogCategoryViewModel Model)
+        public async Task<IActionResult> insertblogCategory(BlogCategoryViewModel Model)
         {
             BlogCategory blogcategory = new BlogCategory
             {
@@ -43,54 +44,56 @@ namespace MedAdvice.Areas.Admin.Controllers
 
             if (Model.BlogCategoryPicture == null)
             {
-                blogcategory.BlogCategoryPicture = ImageUpload.ReadDefault(env, "advicetextheader.jpg");
-            }
-            else if (ImageUpload.TryRead(Model.BlogCategoryPicture, out byte[] picture, out string pictureError))
-            {
-                blogcategory.BlogCategoryPicture = picture;
+                blogcategory.BlogCategoryPicture = await ImageUpload.ReadDefaultAsync(env, "advicetextheader.jpg");
             }
             else
             {
-                TempData["msg"] = pictureError;
-                return View();
+                ImageReadResult picture = await ImageUpload.ReadAsync(Model.BlogCategoryPicture);
+                if (picture.Ok == false)
+                {
+                    TempData["msg"] = picture.Error;
+                    return View();
+                }
+                blogcategory.BlogCategoryPicture = picture.Content;
             }
             db.Add(blogcategory);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return View();
         }
         
         [HttpGet]
-        public IActionResult InsertBlogDetail()
+        public async Task<IActionResult> InsertBlogDetail()
         {
-            ViewData["BlogCategories"] = db.blogCategories.Where(x => x.BlogCategoryParentId == null).ToList();
+            ViewData["BlogCategories"] = await db.blogCategories.Where(x => x.BlogCategoryParentId == null).ToListAsync();
             return View();
         }
         [HttpGet]
-        public IActionResult GetBlogCategories(int BlogId)
+        public async Task<IActionResult> GetBlogCategories(int BlogId)
         {
-            List<BlogCategory> blogCategories = db.blogCategories.Where(x => x.BlogCategoryParentId == BlogId).ToList();
+            List<BlogCategory> blogCategories = await db.blogCategories.Where(x => x.BlogCategoryParentId == BlogId).ToListAsync();
             return Json(blogCategories);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertBlogConfirm(BlogViewModel model)
+        public async Task<IActionResult> InsertBlogConfirm(BlogViewModel model)
         {
-            if (ImageUpload.TryRead(model.BlogHeaderImage, out byte[] header, out string headerError) == false)
+            ImageReadResult headerResult = await ImageUpload.ReadAsync(model.BlogHeaderImage);
+            if (headerResult.Ok == false)
             {
-                TempData["msg"] = headerError;
+                TempData["msg"] = headerResult.Error;
                 return RedirectToAction("InsertBlogDetail", "Blog");
             }
             Blog blog = model.ToEntity();
-            blog.BlogHeaderImage = header;
+            blog.BlogHeaderImage = headerResult.Content;
             blog.BlogText = HtmlContentSanitizer.Sanitize(blog.BlogText);
             db.Add(blog);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("InsertBlogImage", "blog", new { BlogId = blog.Id });
         }
         [HttpGet]
-        public IActionResult InsertBlogImage(int blogid)
+        public async Task<IActionResult> InsertBlogImage(int blogid)
         {
-            Blog blog = db.Blogs.FirstOrDefault(x => x.Id == blogid);
+            Blog blog = await db.Blogs.FirstOrDefaultAsync(x => x.Id == blogid);
 
             HttpContext.Session.SetInt32("blogid" , blogid);
 
@@ -99,19 +102,20 @@ namespace MedAdvice.Areas.Admin.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertBlogImageConfirm(BlogImageViewModel model)
+        public async Task<IActionResult> InsertBlogImageConfirm(BlogImageViewModel model)
         {
             int blogid = HttpContext.Session.GetInt32("blogid").Value;
-            if (ImageUpload.TryRead(model.Blogimg, out byte[] image, out string imageError) == false)
+            ImageReadResult imageResult = await ImageUpload.ReadAsync(model.Blogimg);
+            if (imageResult.Ok == false)
             {
-                TempData["msg"] = imageError;
+                TempData["msg"] = imageResult.Error;
                 return RedirectToAction("InsertBlogImage", "Blog", new { blogid = blogid });
             }
             BlogImage blogImage = model.ToEntity();
-            blogImage.Blogimg = image;
+            blogImage.Blogimg = imageResult.Content;
             blogImage.BlogId = blogid;
             db.Add(blogImage);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("InsertBlogImage", "Blog", new { blogid = blogid });
         }
     }

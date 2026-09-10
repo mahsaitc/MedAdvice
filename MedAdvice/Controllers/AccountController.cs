@@ -156,7 +156,7 @@ namespace MedAdvice.Controllers
         public async Task<IActionResult> signupconfirm(SignupUserViewmodel model,
             [FromServices] CaptchaService captchaService)
         {
-            CaptchaServiceResult s = captchaService.verifycaptcha(this);
+            CaptchaServiceResult s = await captchaService.VerifyCaptchaAsync(this);
             if (s != CaptchaServiceResult.Human)
                 return RedirectToAction("SignInSignUp", "Account");
             ApplicationUser user = await userManager.FindByNameAsync(model.username);
@@ -201,7 +201,7 @@ namespace MedAdvice.Controllers
         public async Task<IActionResult> signinconfirm(signinuserviewmodel model
              ,[FromServices] CaptchaService captchaService)
         {
-            CaptchaServiceResult s = captchaService.verifycaptcha(this);
+            CaptchaServiceResult s = await captchaService.VerifyCaptchaAsync(this);
             if (s != CaptchaServiceResult.Human)
                 return RedirectToAction("SignInSignUp", "Account");
 

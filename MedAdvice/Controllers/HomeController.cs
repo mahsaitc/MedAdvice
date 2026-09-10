@@ -19,17 +19,19 @@ namespace MedAdvice.Controllers
         MedAdviceDb Db;
         UserManager<ApplicationUser> userManager;
         IConfiguration configuration;
-        public HomeController(MedAdviceDb _db,UserManager<ApplicationUser> _userManager,IConfiguration _configuration)
+        IHttpClientFactory httpClientFactory;
+        public HomeController(MedAdviceDb _db,UserManager<ApplicationUser> _userManager,IConfiguration _configuration,IHttpClientFactory _httpClientFactory)
         {
             Db = _db;
             userManager = _userManager;
             configuration = _configuration;
+            httpClientFactory = _httpClientFactory;
         }
         ///advice area
         ///
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult InsertAdviceCommentConfirm(AdviceCommentViewMoldel model)
+        public async Task<IActionResult> InsertAdviceCommentConfirm(AdviceCommentViewMoldel model)
         {
             AdviceComment adviceComment = new AdviceComment { 
                 comment = model.comment,
@@ -41,37 +43,39 @@ namespace MedAdvice.Controllers
             };
             
             Db.Add(adviceComment);
-            Db.SaveChanges();
+            await Db.SaveChangesAsync();
             return RedirectToAction("ViewAdviceDetails",new{ id = model.AdviceId });
         }
-        public IActionResult ShowAdviceCategoriesLevelOne()
+        public async Task<IActionResult> ShowAdviceCategoriesLevelOne()
         {
-            var AdviceCategories = Db.adviceCategories.Where(x => x.AdviceCategoryParentId == null).ToList();
+            var AdviceCategories = await Db.adviceCategories.Where(x => x.AdviceCategoryParentId == null).ToListAsync();
             return View(AdviceCategories);
         }
-        public IActionResult ShowAdviceCategoriesLevelTwo(int id)
+        public async Task<IActionResult> ShowAdviceCategoriesLevelTwo(int id)
         {
-            var AdviceCategoriesLevelTwo = Db.adviceCategories.Where(x => x.AdviceCategoryParentId == id).ToList();
+            var AdviceCategoriesLevelTwo = await Db.adviceCategories.Where(x => x.AdviceCategoryParentId == id).ToListAsync();
            
             return View(AdviceCategoriesLevelTwo);
         }
        
-        public IActionResult ShowAdvices(int id)
+        public async Task<IActionResult> ShowAdvices(int id)
         {
-            var advices = Db.Advices.Where(x => x.AdviceCategoryId == id).Include(y => y.AdviceCategory).ToList();
+            var advices = await Db.Advices.Where(x => x.AdviceCategoryId == id).Include(y => y.AdviceCategory).ToListAsync();
             return View(advices);
         }
-        public IActionResult MedicalAdvices()
+        public async Task<IActionResult> MedicalAdvices()
         {
-            var Advices = Db.Advices.Include(x=>x.AdviceCategory) .ToList();
+            var Advices = await Db.Advices.Include(x=>x.AdviceCategory) .ToListAsync();
             return View(Advices);
         }
-        public IActionResult ViewAdviceDetails(int id)
+        public async Task<IActionResult> ViewAdviceDetails(int id)
         {
-            Advice advice = Db.Advices.Include(y=>y.AdviceImages).Include(z=>z.AdviceCategory).FirstOrDefault(x=>x.Id==id);
-            var adviceCategoriesfirst = Db.adviceCategories.Where(x=>x.AdviceCategoryParentId==null).ToList();
-            var blogs = Db.Blogs.Include(x => x.BlogImages).Include(y => y.BlogCategory).ToList();
-            var lastfourblogs = blogs.TakeLast(4).ToList();
+            Advice advice = await Db.Advices.Include(y=>y.AdviceImages).Include(z=>z.AdviceCategory).FirstOrDefaultAsync(x=>x.Id==id);
+            var adviceCategoriesfirst = await Db.adviceCategories.Where(x=>x.AdviceCategoryParentId==null).ToListAsync();
+            var lastfourblogs = await Db.Blogs
+                .OrderByDescending(x => x.Id)
+                .Take(4)
+                .ToListAsync();
             ViewData["lastfourblogs"] = lastfourblogs;
             ViewData["advice"] = advice;
             
@@ -79,107 +83,111 @@ namespace MedAdvice.Controllers
 
         }
         [HttpGet]
-        public IActionResult GetAdviceCategories(int id)
+        public async Task<IActionResult> GetAdviceCategories(int id)
         {
-            var advicecategories = Db.adviceCategories.Where(x => x.AdviceCategoryParentId == id);
+            var advicecategories = await Db.adviceCategories.Where(x => x.AdviceCategoryParentId == id).ToListAsync();
             return Json(advicecategories);
         }
-        public IActionResult SearchAdvice(string sname)
+        public async Task<IActionResult> SearchAdvice(string sname)
         {
-            var sadvice = Db.Advices.Include(x => x.AdviceImages).Include(y => y.AdviceCategory).Where(z => z.AdviceTitle.Contains(sname)).ToList();
+            var sadvice = await Db.Advices.Include(x => x.AdviceImages).Include(y => y.AdviceCategory).Where(z => z.AdviceTitle.Contains(sname)).ToListAsync();
             return View(sadvice);
         }
    //doctor area
       
-        public IActionResult Doctors()
+        public async Task<IActionResult> Doctors()
         {
-            var doctors = Db.Doctors.Include(x=>x.DrSpaciality). ToList();
+            var doctors = await Db.Doctors.Include(x=>x.DrSpaciality).ToListAsync();
 
             return View(doctors);
         }
-        public IActionResult DoctorDetails(int id)
+        public async Task<IActionResult> DoctorDetails(int id)
         {
             Doctor doctor = Db.Doctors.Include(x => x.DrImages).Include(z=>z.DrSpaciality). FirstOrDefault(y => y.Id == id);
             ViewData["doctor"] = doctor;
            
            
-            var blogs = Db.Blogs.Include(x => x.BlogImages).Include(y => y.BlogCategory).ToList();
-            var lastfourblogs = blogs.TakeLast(4).ToList();
+            var lastfourblogs = await Db.Blogs
+                .OrderByDescending(x => x.Id)
+                .Take(4)
+                .ToListAsync();
             ViewData["lastfourblogs"] = lastfourblogs;
            
-            var DrSpacialityLevelOne = Db.DoctorSpacialities.Where(x => x.DrSpacialityParentId == null).ToList();
+            var DrSpacialityLevelOne = await Db.DoctorSpacialities.Where(x => x.DrSpacialityParentId == null).ToListAsync();
             return View(DrSpacialityLevelOne);
         }
         [HttpGet]
-        public IActionResult GetDrSpaciality(int id)
+        public async Task<IActionResult> GetDrSpaciality(int id)
         {
-            var drspacialities = Db.DoctorSpacialities.Where(x => x.DrSpacialityParentId == id);
+            var drspacialities = await Db.DoctorSpacialities.Where(x => x.DrSpacialityParentId == id).ToListAsync();
             return Json(drspacialities);
         }
-        public IActionResult ViewDrGroups()
+        public async Task<IActionResult> ViewDrGroups()
         {
-            var drgroups = Db.DoctorSpacialities.Where(x => x.DrSpacialityParentId == null).ToList();
+            var drgroups = await Db.DoctorSpacialities.Where(x => x.DrSpacialityParentId == null).ToListAsync();
             return View(drgroups);
         }
-        public IActionResult ViewDrSpacialities(int id)
+        public async Task<IActionResult> ViewDrSpacialities(int id)
         {
-            var drspacialities = Db.DoctorSpacialities.Where(x => x.DrSpacialityParentId == id).ToList();
+            var drspacialities = await Db.DoctorSpacialities.Where(x => x.DrSpacialityParentId == id).ToListAsync();
             return View(drspacialities);
         }
-        public IActionResult ViewDoctorsbyCategory(int id)
+        public async Task<IActionResult> ViewDoctorsbyCategory(int id)
         {
-            var doctors = Db.Doctors.Include(x => x.DrSpaciality).Where(y => y.DrSpacialityId == id).ToList();
+            var doctors = await Db.Doctors.Include(x => x.DrSpaciality).Where(y => y.DrSpacialityId == id).ToListAsync();
             return View(doctors);
         }
-        public IActionResult SearchDoctor(string sname)
+        public async Task<IActionResult> SearchDoctor(string sname)
         {
-            var sdoctor = Db.Doctors.Include(x => x.DrImages).Include(y => y.DrSpaciality).Where(z => z.FamillyName.Contains(sname) || z.FirstName.Contains(sname)).ToList();
+            var sdoctor = await Db.Doctors.Include(x => x.DrImages).Include(y => y.DrSpaciality).Where(z => z.FamillyName.Contains(sname) || z.FirstName.Contains(sname)).ToListAsync();
             return View(sdoctor);
         }
         //widget area
 
         ///blog area
-        public IActionResult Blog()
+        public async Task<IActionResult> Blog()
         {
-            var blogs = Db.Blogs.Include(x=>x.BlogCategory). ToList();
+            var blogs = await Db.Blogs.Include(x=>x.BlogCategory).ToListAsync();
           
             return View(blogs);
         }
         
         [HttpGet]
-        public IActionResult BlogCategoriesLevelTwo(int id)
+        public async Task<IActionResult> BlogCategoriesLevelTwo(int id)
         {
-            var blogcategories = Db.blogCategories.Where(x => x.BlogCategoryParentId == id);
+            var blogcategories = await Db.blogCategories.Where(x => x.BlogCategoryParentId == id).ToListAsync();
             return Json(blogcategories);
         }
-        public IActionResult BlogDetails(int id)
+        public async Task<IActionResult> BlogDetails(int id)
         {
-            Blog blog = Db.Blogs.Include(x => x.BlogImages).Include(z => z.BlogCategory).FirstOrDefault(y => y.Id == id);
+            Blog blog = await Db.Blogs.Include(x => x.BlogImages).Include(z => z.BlogCategory).FirstOrDefaultAsync(y => y.Id == id);
             ViewData["blog"] = blog;
-            var blogcategoriesfirst = Db.blogCategories.Where(x => x.BlogCategoryParentId == null).ToList();
-            var blogs = Db.Blogs.Include(x => x.BlogImages).Include(y => y.BlogCategory).ToList();
-            var lastfourblogs = blogs.TakeLast(4).ToList();
+            var blogcategoriesfirst = await Db.blogCategories.Where(x => x.BlogCategoryParentId == null).ToListAsync();
+            var lastfourblogs = await Db.Blogs
+                .OrderByDescending(x => x.Id)
+                .Take(4)
+                .ToListAsync();
             ViewData["lastfourblogs"] = lastfourblogs;
             return View(blogcategoriesfirst);
         }
-        public IActionResult BlogCategories()
+        public async Task<IActionResult> BlogCategories()
         {
-            var blogcategorylevelone = Db.blogCategories.Where(z => z.BlogCategoryParentId == null).ToList();
+            var blogcategorylevelone = await Db.blogCategories.Where(z => z.BlogCategoryParentId == null).ToListAsync();
             return View(blogcategorylevelone);
         }
-        public IActionResult BlogCategoriesTwo(int id)
+        public async Task<IActionResult> BlogCategoriesTwo(int id)
         {
-            var blogcategorylevelTwo = Db.blogCategories.Where(z => z.BlogCategoryParentId == id).ToList();
+            var blogcategorylevelTwo = await Db.blogCategories.Where(z => z.BlogCategoryParentId == id).ToListAsync();
             return View(blogcategorylevelTwo);
         }
-        public IActionResult BlogCategoriesThree(int id)
+        public async Task<IActionResult> BlogCategoriesThree(int id)
         {
-            var blogs = Db.Blogs.Include(x => x.BlogCategory).Include(y => y.BlogImages).Where(z => z.BlogCategoryId == id).ToList();
+            var blogs = await Db.Blogs.Include(x => x.BlogCategory).Include(y => y.BlogImages).Where(z => z.BlogCategoryId == id).ToListAsync();
             return View(blogs);
         }
-        public IActionResult SearchBlog(string sname)
+        public async Task<IActionResult> SearchBlog(string sname)
         {
-            var sblog = Db.Blogs.Include(x => x.BlogImages).Include(y => y.BlogCategory).Where(z => z.BlogTitle.Contains(sname) || z.BlogText.Contains(sname) || z.BlogBriefText.Contains(sname)).ToList();
+            var sblog = await Db.Blogs.Include(x => x.BlogImages).Include(y => y.BlogCategory).Where(z => z.BlogTitle.Contains(sname) || z.BlogText.Contains(sname) || z.BlogBriefText.Contains(sname)).ToListAsync();
             return View(sblog);
         }
         public IActionResult Contact()
@@ -219,7 +227,7 @@ namespace MedAdvice.Controllers
         }
         public async Task<IActionResult> ShowTehranWeather()
         {
-            HttpClient httpClient = new HttpClient();
+            HttpClient httpClient = httpClientFactory.CreateClient();
             var Status = await httpClient.GetAsync(
                 $"{configuration["WeatherApi:BaseUrl"]}?key={configuration["WeatherApi:Key"]}&q=tehran&aqi=yes");
             if (Status.IsSuccessStatusCode)
@@ -236,7 +244,7 @@ namespace MedAdvice.Controllers
 
         public async Task<IActionResult> ShowBitcoinPrice()
         {
-            HttpClient httpClient = new HttpClient();
+            HttpClient httpClient = httpClientFactory.CreateClient();
             var Status = await httpClient.GetAsync("https://api.coindesk.com/v1/bpi/currentprice.json");
             if (Status.IsSuccessStatusCode)
             {
