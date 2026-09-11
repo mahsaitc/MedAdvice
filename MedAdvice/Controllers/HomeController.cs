@@ -34,6 +34,12 @@ namespace MedAdvice.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> InsertAdviceCommentConfirm(AdviceCommentViewMoldel model)
         {
+            if (ModelState.IsValid == false)
+            {
+                TempData["msg"] = string.Join(" ", ModelState.Values
+                    .SelectMany(x => x.Errors).Select(x => x.ErrorMessage));
+                return RedirectToAction("ViewAdviceDetails", new { id = model.AdviceId });
+            }
             AdviceComment adviceComment = new AdviceComment { 
                 comment = model.comment,
                 EmailAdress = model.EmailAdress,
