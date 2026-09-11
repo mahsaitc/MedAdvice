@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MedAdvice.viewmodel
 {
-    public class signinuserviewmodel
+    public class SigninUserViewModel
     {
         [Required(ErrorMessage = "please enter username!")]
         public string username { get; set; }
