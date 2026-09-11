@@ -268,13 +268,13 @@ namespace MedAdvice.Controllers
         {
             public string rate { get; set; }
         }
-        class bpi
+        class Bpi
         {
             public USD USD { get; set; }
         }
         class Data
         {
-            public bpi bpi { get; set; }
+            public Bpi bpi { get; set; }
         }
         public IActionResult Index()
         {

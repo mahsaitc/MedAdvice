@@ -8,7 +8,7 @@ namespace MedAdvice.viewmodel
     public class AdviceCommentViewMoldel
     {
         public int id { get; set; }
-        public string? Userid { get; set; }
+        public string Userid { get; set; }
        
         public int AdviceId { get; set; }
         

@@ -10,7 +10,7 @@ namespace MedAdvice.Models
     public class AdviceComment
     {
         public int id { get; set; }
-        public string? Userid  { get; set; }
+        public string Userid  { get; set; }
         [ForeignKey("Userid")]
         public ApplicationUser User { get; set; }
 

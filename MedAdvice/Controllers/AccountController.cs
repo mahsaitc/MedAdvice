@@ -237,7 +237,7 @@ namespace MedAdvice.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> signinconfirm(signinuserviewmodel model
+        public async Task<IActionResult> signinconfirm(SigninUserViewModel model
              ,[FromServices] CaptchaService captchaService)
         {
             CaptchaServiceResult s = await captchaService.VerifyCaptchaAsync(this);
