@@ -26,7 +26,7 @@
             <div class="col-lg-8">
                 <div class="services-details">
                     <div class="header-img">
-                        <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(Model.productImages[0].img)}") alt="Image">
+                        <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(Model.productImages?.FirstOrDefault()?.imgPath, MedAdvice.viewmodel.ImageFallbacks.Product, "Image")' />
                     </div>
                     <div class="details-text">
                         <h3>Description:</h3>
@@ -206,7 +206,7 @@
                         {
                             <div class="col-lg-4 col-sm-6 mix cardiologist surgery" style="display: inline-block;" data-bound="">
                                 <div class="single-gallery">
-                                    <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(item.img)}")>
+                                    <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(item.imgPath, MedAdvice.viewmodel.ImageFallbacks.Product)' />
                                     <div>
                                         <small>@item.title</small>
                                     </div>

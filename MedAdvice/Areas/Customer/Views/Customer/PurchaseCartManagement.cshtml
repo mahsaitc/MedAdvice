@@ -35,7 +35,7 @@
                                     <tr>
                                         <td class="product-thumbnail">
                                             <a href="#">
-                                                <img width="80" src="@($"data:image/jpeg;base64,{Convert.ToBase64String(item.Product.productImages[0].img)}")">
+                                                <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(item.Product.productImages?.FirstOrDefault()?.imgPath, MedAdvice.viewmodel.ImageFallbacks.Product, "Image", null, 80)' />
                                             </a>
                                         </td>
 

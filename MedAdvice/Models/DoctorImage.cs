@@ -10,7 +10,7 @@ namespace MedAdvice.Models
     {
         public int Id { get; set; }
         public string DoctorImageTitle { get; set; }
-        public byte[] Doctorimg { get; set; }
+        public string DoctorimgPath { get; set; }
 
         public int DoctorId { get; set; }
         [ForeignKey("DoctorId")]

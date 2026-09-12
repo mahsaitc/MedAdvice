@@ -31,7 +31,7 @@
                 <div class="col-lg-4 col-sm-6">
                     <div class="doctors-card">
                         <a href="/home/DoctorDetails">
-                            <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(item.DrProfileImage)}") alt="Image">
+                            <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(item.DrProfileImagePath, MedAdvice.viewmodel.ImageFallbacks.Doctor, "Image")' />
 
                         </a>
 

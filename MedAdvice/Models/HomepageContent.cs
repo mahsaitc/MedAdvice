@@ -16,7 +16,7 @@ namespace MedAdvice.Models
 
         /// Null falls back to the theme image shipped in wwwroot, so the page renders
         /// unchanged until an admin uploads one.
-        public byte[] HeroImage { get; set; }
+        public string HeroImagePath { get; set; }
 
         public bool AnnouncementVisible { get; set; }
         public string AnnouncementText { get; set; }

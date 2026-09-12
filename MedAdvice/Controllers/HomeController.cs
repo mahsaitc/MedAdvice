@@ -242,7 +242,7 @@ namespace MedAdvice.Controllers
                     {
                         Title = article.Blog.BlogTitle,
                         BriefText = article.Blog.BlogBriefText,
-                        Image = article.Blog.BlogHeaderImage,
+                        ImagePath = article.Blog.BlogHeaderImagePath,
                         Controller = "home",
                         Action = "BlogDetails",
                         RouteId = article.Blog.Id
@@ -254,7 +254,7 @@ namespace MedAdvice.Controllers
                     {
                         Title = article.Advice.AdviceTitle,
                         BriefText = article.Advice.AdviceBriefText,
-                        Image = article.Advice.AdviceHeaderImage,
+                        ImagePath = article.Advice.AdviceHeaderImagePath,
                         Controller = "home",
                         Action = "ViewAdviceDetails",
                         RouteId = article.Advice.Id

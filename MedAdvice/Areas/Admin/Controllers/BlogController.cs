@@ -20,11 +20,11 @@ namespace MedAdvice.Areas.Admin.Controllers
     public class BlogController : Controller
     {
         MedAdviceDb db;
-        IWebHostEnvironment env;
-        public BlogController(MedAdviceDb _db, IWebHostEnvironment _env)
+        ImageStorage images;
+        public BlogController(MedAdviceDb _db, ImageStorage _images)
         {
             db = _db;
-            env = _env;
+            images = _images;
         }
         [HttpGet]
         public IActionResult insertblogCategory()
@@ -46,19 +46,17 @@ namespace MedAdvice.Areas.Admin.Controllers
 
             };
 
-            if (Model.BlogCategoryPicture == null)
+            // No file uploaded leaves the path null; the view falls back to the
+            // theme image rather than copying a default into the database.
+            if (Model.BlogCategoryPicture != null)
             {
-                blogcategory.BlogCategoryPicture = await ImageUpload.ReadDefaultAsync(env, "advicetextheader.jpg");
-            }
-            else
-            {
-                ImageReadResult picture = await ImageUpload.ReadAsync(Model.BlogCategoryPicture);
+                ImageSaveResult picture = await images.SaveAsync(Model.BlogCategoryPicture, ImageFolders.Blogs);
                 if (picture.Ok == false)
                 {
                     TempData["msg"] = picture.Error;
                     return View();
                 }
-                blogcategory.BlogCategoryPicture = picture.Content;
+                blogcategory.BlogCategoryPicturePath = picture.Path;
             }
             db.Add(blogcategory);
             await db.SaveChangesAsync();
@@ -86,14 +84,14 @@ namespace MedAdvice.Areas.Admin.Controllers
                 ViewData["BlogCategories"] = await db.blogCategories.Where(x => x.BlogCategoryParentId == null).ToListAsync();
                 return View("InsertBlogDetail", model);
             }
-            ImageReadResult headerResult = await ImageUpload.ReadAsync(model.BlogHeaderImage);
+            ImageSaveResult headerResult = await images.SaveAsync(model.BlogHeaderImage, ImageFolders.Blogs);
             if (headerResult.Ok == false)
             {
                 TempData["msg"] = headerResult.Error;
                 return RedirectToAction("InsertBlogDetail", "Blog");
             }
             Blog blog = model.ToEntity();
-            blog.BlogHeaderImage = headerResult.Content;
+            blog.BlogHeaderImagePath = headerResult.Path;
             blog.BlogText = HtmlContentSanitizer.Sanitize(blog.BlogText);
             db.Add(blog);
             await db.SaveChangesAsync();
@@ -130,14 +128,14 @@ namespace MedAdvice.Areas.Admin.Controllers
                 ViewData["blog"] = await db.Blogs.FirstOrDefaultAsync(x => x.Id == blogid);
                 return View("InsertBlogImage", model);
             }
-            ImageReadResult imageResult = await ImageUpload.ReadAsync(model.Blogimg);
+            ImageSaveResult imageResult = await images.SaveAsync(model.Blogimg, ImageFolders.Blogs);
             if (imageResult.Ok == false)
             {
                 TempData["msg"] = imageResult.Error;
                 return RedirectToAction("InsertBlogImage", "Blog", new { blogid = blogid });
             }
             BlogImage blogImage = model.ToEntity();
-            blogImage.Blogimg = imageResult.Content;
+            blogImage.BlogimgPath = imageResult.Path;
             blogImage.BlogId = blogid;
             db.Add(blogImage);
             await db.SaveChangesAsync();

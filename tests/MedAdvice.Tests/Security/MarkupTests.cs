@@ -135,6 +135,36 @@ namespace MedAdvice.Tests.Security
         }
 
         [Fact]
+        public void No_view_embeds_an_image_as_a_base64_data_uri()
+        {
+            // Images are files on disk now. Inlining one as a data URI puts the bytes in
+            // the HTML of every page that shows it, defeats browser caching, and throws
+            // outright when the value is null -- which is how twenty-seven of these sites
+            // behaved before the move.
+            string root = ProjectRoot();
+            List<string> offenders = new List<string>();
+
+            foreach (string file in Directory.EnumerateFiles(root, "*.cshtml", SearchOption.AllDirectories))
+            {
+                string relative = Path.GetRelativePath(root, file).Replace('\\', '/');
+                if (relative.StartsWith("bin/") || relative.StartsWith("obj/"))
+                {
+                    continue;
+                }
+
+                string content = File.ReadAllText(file);
+                if (content.Contains("Convert.ToBase64String") || content.Contains("base64,"))
+                {
+                    offenders.Add(relative);
+                }
+            }
+
+            Assert.True(offenders.Count == 0,
+                "views embedding images as base64 rather than referencing a stored file:\n  "
+                + string.Join("\n  ", offenders));
+        }
+
+        [Fact]
         public void No_view_renders_unsanitised_rich_text()
         {
             // The three rich text fields must pass through the sanitiser on the way out, as

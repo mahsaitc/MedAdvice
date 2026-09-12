@@ -29,7 +29,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="blog-card">
                         <a asp-controller="home" asp-action="BlogCategoriesTwo" asp-route-id="@items.Id">
-                            <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(items.BlogCategoryPicture)}")>
+                            <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(items.BlogCategoryPicturePath, MedAdvice.viewmodel.ImageFallbacks.Blog)' />
                         </a>
                         <div class="b-card-text">
                             <span>@items.BlogCategoryname <a asp-controller="home" asp-action="BlogCategoriesTwo" asp-route-id="@items.Id"></a></span>

@@ -25,7 +25,7 @@
             <div class="col-lg-8">
                 <div class="services-details">
                     <div class="header-img">
-                        <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(blog.BlogHeaderImage)}") alt="Image">
+                        <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(blog.BlogHeaderImagePath, MedAdvice.viewmodel.ImageFallbacks.Blog, "Image")' />
                     </div>
                     <ul>
                         <li>
@@ -145,7 +145,7 @@
                         {
                             <div class="col-lg-4 col-sm-6 mix cardiologist surgery" style="display: inline-block;" data-bound="">
                                 <div class="single-gallery">
-                                    <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(item.Blogimg)}")>
+                                    <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(item.BlogimgPath, MedAdvice.viewmodel.ImageFallbacks.Blog)' />
                                     <div>
                                         <small>@item.BlogImageTitle</small>
                                     </div>

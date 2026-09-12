@@ -17,10 +17,12 @@ namespace MedAdvice.Areas.Admin.Controllers
     public class HomepageController : Controller
     {
         MedAdviceDb db;
+        ImageStorage images;
 
-        public HomepageController(MedAdviceDb _db)
+        public HomepageController(MedAdviceDb _db, ImageStorage _images)
         {
             db = _db;
+            images = _images;
         }
 
         /// The table holds a single row. The seed migration creates it; this guards against
@@ -49,7 +51,7 @@ namespace MedAdvice.Areas.Admin.Controllers
                 HeroTagline = content.HeroTagline,
                 HeroTitle = content.HeroTitle,
                 HeroText = content.HeroText,
-                HasHeroImage = content.HeroImage != null && content.HeroImage.Length > 0,
+                HasHeroImage = string.IsNullOrEmpty(content.HeroImagePath) == false,
                 AnnouncementVisible = content.AnnouncementVisible,
                 AnnouncementText = content.AnnouncementText,
                 AnnouncementCtaText = content.AnnouncementCtaText,
@@ -62,7 +64,7 @@ namespace MedAdvice.Areas.Admin.Controllers
         public async Task<IActionResult> IndexConfirm(HomepageContentViewModel model)
         {
             HomepageContent content = await GetOrCreateContentAsync();
-            model.HasHeroImage = content.HeroImage != null && content.HeroImage.Length > 0;
+            model.HasHeroImage = string.IsNullOrEmpty(content.HeroImagePath) == false;
 
             if (ModelState.IsValid == false)
             {
@@ -80,18 +82,21 @@ namespace MedAdvice.Areas.Admin.Controllers
             // Leaving the file empty keeps the current image rather than clearing it.
             if (model.HeroImage != null)
             {
-                ImageReadResult image = await ImageUpload.ReadAsync(model.HeroImage);
+                ImageSaveResult image = await images.SaveAsync(model.HeroImage, ImageFolders.Homepage);
                 if (image.Ok == false)
                 {
                     ModelState.AddModelError(string.Empty, image.Error);
                     return View("Index", model);
                 }
-                content.HeroImage = image.Content;
+                // The replaced file would otherwise stay on disk with nothing pointing at it.
+                images.Delete(content.HeroImagePath);
+                content.HeroImagePath = image.Path;
             }
 
             if (model.RemoveHeroImage)
             {
-                content.HeroImage = null;
+                images.Delete(content.HeroImagePath);
+                content.HeroImagePath = null;
             }
 
             await db.SaveChangesAsync();

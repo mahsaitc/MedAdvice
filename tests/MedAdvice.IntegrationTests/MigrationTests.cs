@@ -8,8 +8,8 @@ using Xunit;
 
 namespace MedAdvice.IntegrationTests
 {
-    /// Group C: the 17 migrations against a real SQL Server engine. Confirmed viable during
-    /// planning -- 17 migrations, 26 tables, HomepageSections seeded 8 rows (7 visible, the
+    /// Group C: the 18 migrations against a real SQL Server engine. Confirmed viable during
+    /// planning -- 18 migrations, 26 tables, HomepageSections seeded 8 rows (7 visible, the
     /// new "featured" block hidden), HomepageContents seeded with the hero title, and the
     /// AdviceComment/adviceComments table-name pin from Batch 5 holding.
     public class MigrationTests : IClassFixture<SqlServerFixture>
@@ -22,7 +22,7 @@ namespace MedAdvice.IntegrationTests
         }
 
         [SkippableFact]
-        public async Task All_seventeen_migrations_apply_from_empty()
+        public async Task All_eighteen_migrations_apply_from_empty()
         {
             Skip.IfNot(fixture.IsAvailable, fixture.SkipReason);
 
@@ -31,12 +31,12 @@ namespace MedAdvice.IntegrationTests
                 await context.Database.MigrateAsync();
 
                 IEnumerable<string> applied = await context.Database.GetAppliedMigrationsAsync();
-                Assert.Equal(17, applied.Count());
+                Assert.Equal(18, applied.Count());
             }
         }
 
         [SkippableFact]
-        public async Task Migration_history_ends_at_medadvice19()
+        public async Task Migration_history_ends_at_medadvice20()
         {
             Skip.IfNot(fixture.IsAvailable, fixture.SkipReason);
 
@@ -48,7 +48,7 @@ namespace MedAdvice.IntegrationTests
                     .OrderBy(x => x)
                     .ToArray();
 
-                Assert.EndsWith("_medadvice19", applied.Last());
+                Assert.EndsWith("_medadvice20", applied.Last());
             }
         }
 

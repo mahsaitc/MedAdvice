@@ -16,7 +16,7 @@ namespace MedAdvice.Models
         public int BlogCategoryId { get; set; }
         [ForeignKey("BlogCategoryId")]
         public BlogCategory BlogCategory { get; set; }
-        public byte[] BlogHeaderImage { get; set; }
+        public string BlogHeaderImagePath { get; set; }
         public List<BlogImage> BlogImages { get; set; }
     }
 }

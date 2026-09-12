@@ -30,7 +30,7 @@
                         <div class="service-card">
                             @*<i class="bx bx-strikethrough main-icon"></i>*@
                             <div class="header-img">
-                                <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(item.AdviceHeaderImage)}")>
+                                <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(item.AdviceHeaderImagePath, MedAdvice.viewmodel.ImageFallbacks.Advice)' />
                             </div>
                             <h3>@item.AdviceTitle</h3>
                            

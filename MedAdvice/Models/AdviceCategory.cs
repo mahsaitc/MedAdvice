@@ -16,7 +16,7 @@ namespace MedAdvice.Models
         
         public AdviceCategory AdviceCategoryParent { get; set; }
         public List<AdviceCategory> AdviceCategoryChildren { get; set; }
-        public byte[] AdviceCategoryPicture { get; set; }
+        public string AdviceCategoryPicturePath { get; set; }
 
     }
 }
