@@ -43,14 +43,15 @@ namespace MedAdvice
                 x.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
             });
             services.AddHttpClient();
+            // Runs on host start, for the real host and any test host built from
+            // CreateHostBuilder alike. See IdentitySeedHostedService.
+            services.AddHostedService<MedAdvice.Areas.Identity.IdentitySeedHostedService>();
             services.AddSingleton(typeof(CaptchaService));
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
-           UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)//1-moarefi usermanager va rolemanager
-
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             
             if (env.IsDevelopment())
@@ -83,58 +84,6 @@ namespace MedAdvice
                     name: "default",
                     pattern: "{controller=Home}/{action=home}/{id?}");
             });
-            ///2 - seda karad tabe identityinitializer
-            Identityinitializer(userManager, roleManager).Wait();
-        }
-        ///3-nevashtan tabe identityinitializer
-        private async Task Identityinitializer(UserManager<ApplicationUser> usermanager,
-            RoleManager<IdentityRole> rolemanager)
-        {
-            ///4-sakhte list roleha
-            List<string> roles = new List<string> { "admins", "customers" };
-            ////5-farakhani list va agar nist sakhtan har item
-            foreach (var item in roles)
-            {
-                if ((await rolemanager.RoleExistsAsync(item)) == false)
-                {
-                    IdentityRole identityRole = new IdentityRole(item);
-                    /////6-sakhte roleha dar rolemanager
-                    await rolemanager.CreateAsync(identityRole);
-                }
-            }
-            ////7-saerch username  admin dar usermanager va sakhtan an agar nabud
-            string adminUserName = Configuration["AdminSeed:UserName"];
-            string adminPassword = Configuration["AdminSeed:Password"];
-            if (string.IsNullOrEmpty(adminUserName) || string.IsNullOrEmpty(adminPassword))
-            {
-                // No admin seed configured: roles are still created, no account is provisioned.
-                return;
-            }
-            ApplicationUser admin = await usermanager.FindByNameAsync(adminUserName);
-            if (admin == null)
-            {
-                admin = new ApplicationUser
-                {
-                    UserName = adminUserName,
-                    firstname = "admin",
-                    lastname = "admin",
-                    Email = Configuration["AdminSeed:Email"],
-                    EmailConfirmed = true
-
-                };
-                ///8-ezafe kardan admin va password be usermanager
-                IdentityResult adminResult = await usermanager.CreateAsync(admin, adminPassword);
-                if (adminResult.Succeeded == false)
-                {
-                    return;
-                }
-            }
-           
-            ////9- barrasi budan admin dar roleha va agar nabud ezafe kardane an be rolehaye admins 
-            if (await usermanager.IsInRoleAsync(admin, "admins") == false)
-            {
-                await usermanager.AddToRoleAsync(admin, "admins");
-            }
         }
     }
 }
