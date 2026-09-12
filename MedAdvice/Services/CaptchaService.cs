@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +11,12 @@ namespace MedAdvice.Services
     {
         Failes = -2, Robot = -1, Human = 1
     }
+
+    /// Verifies a reCAPTCHA response with Google.
+    ///
+    /// Takes the response token rather than the calling Controller: reading Request.Form and
+    /// writing TempData made a plain service depend on MVC, and meant it could only ever be
+    /// called from a controller. Reporting the outcome to the user is the caller's job.
     public class CaptchaService
     {
         IConfiguration configuration;
@@ -25,17 +30,30 @@ namespace MedAdvice.Services
         {
             public bool success { get; set; }
         }
-        public async Task<CaptchaServiceResult> VerifyCaptchaAsync(Controller controller)
+
+        /// Describes a result for the user. Lives here so the wording stays with the
+        /// behaviour that produces it, rather than being duplicated at each call site.
+        public static string Describe(CaptchaServiceResult result)
+        {
+            switch (result)
+            {
+                case CaptchaServiceResult.Failes:
+                    return "Error in evaluation of captcha by google";
+                case CaptchaServiceResult.Robot:
+                    return "google knows you as a robot.";
+                default:
+                    return null;
+            }
+        }
+
+        public async Task<CaptchaServiceResult> VerifyCaptchaAsync(string captchaResponse)
         {
             string secretkey = configuration["Recaptcha:SecretKey"];
             HttpClient httpclient = httpClientFactory.CreateClient();
-            var captcha = controller.Request.Form["g-recaptcha-response"];
-            var res = await httpclient.GetAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretkey}&response={captcha}");
+            var res = await httpclient.GetAsync($"https://www.google.com/recaptcha/api/siteverify?secret={secretkey}&response={captchaResponse}");
             if (res.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                controller.TempData["msg"] = "Error in evaluation of captcha by google";
                 return CaptchaServiceResult.Failes;
-
             }
             else
             {
@@ -43,7 +61,6 @@ namespace MedAdvice.Services
                 RecaptchaModel recaptchaModel = Newtonsoft.Json.JsonConvert.DeserializeObject<RecaptchaModel>(json);
                 if (recaptchaModel.success == false)
                 {
-                    controller.TempData["msg"] = "google knows you as a robot.";
                     return CaptchaServiceResult.Robot;
                 }
 
