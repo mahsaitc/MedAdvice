@@ -264,18 +264,6 @@ namespace MedAdvice.Controllers
 
             return View(model);
         }
-        class USD
-        {
-            public string rate { get; set; }
-        }
-        class Bpi
-        {
-            public USD USD { get; set; }
-        }
-        class Data
-        {
-            public Bpi bpi { get; set; }
-        }
         public IActionResult Index()
         {
             //TempData["msg"] = "پیام تست";
@@ -307,20 +295,6 @@ namespace MedAdvice.Controllers
 
         }
 
-
-        public async Task<IActionResult> ShowBitcoinPrice()
-        {
-            HttpClient httpClient = httpClientFactory.CreateClient();
-            var Status = await httpClient.GetAsync("https://api.coindesk.com/v1/bpi/currentprice.json");
-            if (Status.IsSuccessStatusCode)
-            {
-                string content = await Status.Content.ReadAsStringAsync();
-                var Data = Newtonsoft.Json.JsonConvert.DeserializeObject<Data>(content);
-                ViewData["BitCoin"] = Data.bpi.USD.rate;
-
-            }
-            return View();
-        }
         public IActionResult PrivacyPolicy()
         {
             return View();

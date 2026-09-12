@@ -47,18 +47,11 @@ namespace MedAdvice.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetPasswordByPhoneNumberLevelTwo(ResetPasswordViewModel model)
+        public async Task<IActionResult> ResetPasswordByPhoneNumberLevelTwo(ResetPasswordBySmsViewModel model)
         {
             if (ModelState.IsValid == false)
             {
                 TempData["msg"] = DescribeModelErrors();
-                return RedirectToAction("SignInSignUp", "Account");
-            }
-            // smstoken cannot carry [Required]: the email reset flow shares this view
-            // model and never supplies one.
-            if (string.IsNullOrWhiteSpace(model.smstoken))
-            {
-                TempData["msg"] = "please enter the code sent to your phone.";
                 return RedirectToAction("SignInSignUp", "Account");
             }
             string id = HttpContext.Session.GetString("id");
@@ -190,9 +183,13 @@ namespace MedAdvice.Controllers
         public async Task<IActionResult> signupconfirm(SignupUserViewmodel model,
             [FromServices] CaptchaService captchaService)
         {
-            CaptchaServiceResult s = await captchaService.VerifyCaptchaAsync(this);
+            CaptchaServiceResult s = await captchaService.VerifyCaptchaAsync(
+                Request.Form["g-recaptcha-response"]);
             if (s != CaptchaServiceResult.Human)
+            {
+                TempData["msg"] = CaptchaService.Describe(s);
                 return RedirectToAction("SignInSignUp", "Account");
+            }
             if (ModelState.IsValid == false)
             {
                 TempData["msg"] = DescribeModelErrors();
@@ -240,9 +237,13 @@ namespace MedAdvice.Controllers
         public async Task<IActionResult> signinconfirm(SigninUserViewModel model
              ,[FromServices] CaptchaService captchaService)
         {
-            CaptchaServiceResult s = await captchaService.VerifyCaptchaAsync(this);
+            CaptchaServiceResult s = await captchaService.VerifyCaptchaAsync(
+                Request.Form["g-recaptcha-response"]);
             if (s != CaptchaServiceResult.Human)
+            {
+                TempData["msg"] = CaptchaService.Describe(s);
                 return RedirectToAction("SignInSignUp", "Account");
+            }
 
             if (ModelState.IsValid == false)
             {
