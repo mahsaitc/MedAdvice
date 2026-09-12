@@ -26,3 +26,30 @@ jobs:
 
       - name: Test
         run: dotnet test MedAdvice.sln --configuration Release --no-build --verbosity normal
+
+  # Group C (MigrationTests) needs a real SQL Server engine, which the ubuntu-latest job
+  # above does not have -- LocalDB ships on windows-latest. MEDADVICE_TESTS_REQUIRE_SQLSERVER=1
+  # makes SqlServerFixture throw rather than skip if LocalDB turns out to be unreachable here,
+  # so this job actually proves the 17 migrations apply on every PR rather than silently
+  # never running them. Groups A and B (also in this project) run here too, incidentally.
+  integration-tests-windows:
+    runs-on: windows-latest
+    env:
+      MEDADVICE_TESTS_REQUIRE_SQLSERVER: '1'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore
+        run: dotnet restore tests/MedAdvice.IntegrationTests/MedAdvice.IntegrationTests.csproj
+
+      - name: Build
+        run: dotnet build tests/MedAdvice.IntegrationTests/MedAdvice.IntegrationTests.csproj --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test tests/MedAdvice.IntegrationTests/MedAdvice.IntegrationTests.csproj --configuration Release --no-build --verbosity normal
