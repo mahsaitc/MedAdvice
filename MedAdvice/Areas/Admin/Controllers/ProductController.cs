@@ -19,9 +19,11 @@ namespace MedAdvice.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         public MedAdviceDb db { get; set; }
-        public ProductController(MedAdviceDb _db)
+        ImageStorage images;
+        public ProductController(MedAdviceDb _db, ImageStorage _images)
         {
             db = _db;
+            images = _images;
         }
         [HttpGet]
         public async Task<IActionResult> InsertProduct()
@@ -97,14 +99,14 @@ namespace MedAdvice.Areas.Admin.Controllers
                 ViewData["product"] = await db.Products.Include(x => x.Brand).FirstOrDefaultAsync(x => x.Id == productId);
                 return View("insertproductimage", model);
             }
-            ImageReadResult imageResult = await ImageUpload.ReadAsync(model.img);
+            ImageSaveResult imageResult = await images.SaveAsync(model.img, ImageFolders.Products);
             if (imageResult.Ok == false)
             {
                 TempData["msg"] = imageResult.Error;
                 return RedirectToAction("InsertProductImage", "Product", new { productId = productId });
             }
             ProductImage productImage = model.ToEntity();
-            productImage.img = imageResult.Content;
+            productImage.imgPath = imageResult.Path;
             productImage.ProductId = productId;
             db.Add(productImage);
             await db.SaveChangesAsync();

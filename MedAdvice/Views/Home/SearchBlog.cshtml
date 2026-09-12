@@ -28,7 +28,7 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="blog-card">
                         <a asp-controller="home" asp-action="BlogDetails" asp-route-id="@items.Id">
-                            <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(items.BlogHeaderImage)}")>
+                            <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(items.BlogHeaderImagePath, MedAdvice.viewmodel.ImageFallbacks.Blog)' />
                         </a>
                         <div class="b-card-text">
                             <span>@items.BlogDate <a asp-controller="home" asp-action="BlogDetails" asp-route-id="@items.Id"></a></span>

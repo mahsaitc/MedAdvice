@@ -43,6 +43,7 @@ namespace MedAdvice
                 x.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
             });
             services.AddHttpClient();
+            services.AddSingleton<ImageStorage>();
             // Runs on host start, for the real host and any test host built from
             // CreateHostBuilder alike. See IdentitySeedHostedService.
             services.AddHostedService<MedAdvice.Areas.Identity.IdentitySeedHostedService>();

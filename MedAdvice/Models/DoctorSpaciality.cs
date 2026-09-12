@@ -16,6 +16,6 @@ namespace MedAdvice.Models
 
         public DoctorSpaciality DrSpacialiytParent { get; set; }
         public List<DoctorSpaciality> DrSpacialityChildren { get; set; }
-        public byte[] DrSpacialityPicture { get; set; }
+        public string DrSpacialityPicturePath { get; set; }
     }
 }

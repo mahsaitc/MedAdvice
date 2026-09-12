@@ -16,6 +16,6 @@ namespace MedAdvice.Models
 
         public BlogCategory BlogCategoryParent { get; set; }
         public List<BlogCategory> BlogCategoryChildren { get; set; }
-        public byte[] BlogCategoryPicture { get; set; }
+        public string BlogCategoryPicturePath { get; set; }
     }
 }

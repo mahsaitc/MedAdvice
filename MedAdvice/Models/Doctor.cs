@@ -28,7 +28,7 @@ namespace MedAdvice.Models
         public int DrSpacialityId { get; set; }
         [ForeignKey("DrSpacialityId")]
         public DoctorSpaciality DrSpaciality { get; set; }
-        public byte[] DrProfileImage { get; set; }
+        public string DrProfileImagePath { get; set; }
         public List<DoctorImage> DrImages { get; set; }
         
 

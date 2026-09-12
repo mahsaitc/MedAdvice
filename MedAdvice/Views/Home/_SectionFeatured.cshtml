@@ -9,10 +9,7 @@
             {
                 <div class="col-lg-4 col-md-6">
                     <div class="services-item">
-                        @if (article.Image != null && article.Image.Length > 0)
-                        {
-                            <img src="@($"data:image/jpeg;base64,{Convert.ToBase64String(article.Image)}")" alt="@article.Title">
-                        }
+                        <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(article.ImagePath, MedAdvice.viewmodel.ImageFallbacks.Advice, article.Title)' />
                         <h3>
                             <a asp-controller="@article.Controller" asp-action="@article.Action" asp-route-id="@article.RouteId">
                                 @article.Title

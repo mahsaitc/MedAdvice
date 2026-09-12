@@ -26,7 +26,7 @@
             {
                 <div class="col-lg-3 col-sm-6">
                     <div class="service-card">
-                        <img src=@($"data:img/jpeg;base64,{Convert.ToBase64String(item.AdviceCategoryPicture)}")>
+                        <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(item.AdviceCategoryPicturePath, MedAdvice.viewmodel.ImageFallbacks.Advice)' />
                         @*<i class="bx bx-strikethrough main-icon"></i>*@
                         <h3>@item.AdviceCategoryname</h3>
                         <p>@item.AdviceCategoryname</p>

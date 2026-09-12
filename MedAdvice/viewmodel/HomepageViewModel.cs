@@ -7,7 +7,7 @@ namespace MedAdvice.viewmodel
     {
         public string Title { get; set; }
         public string BriefText { get; set; }
-        public byte[] Image { get; set; }
+        public string ImagePath { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
         public int RouteId { get; set; }

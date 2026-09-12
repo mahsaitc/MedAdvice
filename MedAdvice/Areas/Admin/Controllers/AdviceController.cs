@@ -20,11 +20,11 @@ namespace MedAdvice.Areas.Admin.Controllers
     public class AdviceController : Controller
     {
         MedAdviceDb db;
-        IWebHostEnvironment env;
-        public AdviceController(MedAdviceDb _db, IWebHostEnvironment _env)
+        ImageStorage images;
+        public AdviceController(MedAdviceDb _db, ImageStorage _images)
         {
             db = _db;
-            env = _env;
+            images = _images;
         }
         [HttpGet]
         public IActionResult insertAdviceCategory()
@@ -45,19 +45,17 @@ namespace MedAdvice.Areas.Admin.Controllers
 
             };
 
-            if (Model.AdviceCategoryPicture == null)
+            // No file uploaded leaves the path null; the view falls back to the
+            // theme image rather than copying a default into the database.
+            if (Model.AdviceCategoryPicture != null)
             {
-                adviceCategory.AdviceCategoryPicture = await ImageUpload.ReadDefaultAsync(env, "advicetextheader.jpg");
-            }
-            else
-            {
-                ImageReadResult picture = await ImageUpload.ReadAsync(Model.AdviceCategoryPicture);
+                ImageSaveResult picture = await images.SaveAsync(Model.AdviceCategoryPicture, ImageFolders.Advices);
                 if (picture.Ok == false)
                 {
                     TempData["msg"] = picture.Error;
                     return View();
                 }
-                adviceCategory.AdviceCategoryPicture = picture.Content;
+                adviceCategory.AdviceCategoryPicturePath = picture.Path;
             }
             db.Add(adviceCategory);
             await db.SaveChangesAsync();
@@ -89,19 +87,17 @@ namespace MedAdvice.Areas.Admin.Controllers
 
             };
            
-            if (model.AdviceHeaderImage == null)
+            // No file uploaded leaves the path null; the view falls back to the
+            // theme image rather than copying a default into the database.
+            if (model.AdviceHeaderImage != null)
             {
-                advice.AdviceHeaderImage = await ImageUpload.ReadDefaultAsync(env, "advicetextheader.jpg");
-            }
-            else
-            {
-                ImageReadResult header = await ImageUpload.ReadAsync(model.AdviceHeaderImage);
+                ImageSaveResult header = await images.SaveAsync(model.AdviceHeaderImage, ImageFolders.Advices);
                 if (header.Ok == false)
                 {
                     TempData["msg"] = header.Error;
                     return RedirectToAction("InsertAdvice", "Advice");
                 }
-                advice.AdviceHeaderImage = header.Content;
+                advice.AdviceHeaderImagePath = header.Path;
             }
             db.Add(advice);
             await db.SaveChangesAsync();
@@ -137,14 +133,14 @@ namespace MedAdvice.Areas.Admin.Controllers
                 ViewData["Advice"] = await db.FindAsync<Advice>(AdviceId);
                 return View("InsertAdviceImage", model);
             }
-            ImageReadResult imageResult = await ImageUpload.ReadAsync(model.AdviceImage);
+            ImageSaveResult imageResult = await images.SaveAsync(model.AdviceImage, ImageFolders.Advices);
             if (imageResult.Ok == false)
             {
                 TempData["msg"] = imageResult.Error;
                 return RedirectToAction("InsertAdviceImage", "Advice", new { AdviceId = AdviceId });
             }
             AdviceImage adviceImage = model.ToEntity();
-            adviceImage.Adviceimg = imageResult.Content;
+            adviceImage.AdviceimgPath = imageResult.Path;
             adviceImage.AdviceId = AdviceId;
 
 

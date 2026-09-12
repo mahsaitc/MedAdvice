@@ -56,14 +56,7 @@
                         <img src="/layout/img/shapes/shape-2.png" alt="Shape">
                     </div>
                     <div class="image-1">
-                        @if (Model.Content.HeroImage != null && Model.Content.HeroImage.Length > 0)
-                        {
-                            <img src="@($"data:image/jpeg;base64,{Convert.ToBase64String(Model.Content.HeroImage)}")" alt="Image">
-                        }
-                        else
-                        {
-                            <img src="/layout/img/banner/banner-1.jpg" alt="Image">
-                        }
+                        <partial name="_Image" model='new MedAdvice.viewmodel.ImageViewModel(Model.Content.HeroImagePath, MedAdvice.viewmodel.ImageFallbacks.Banner)' />
                     </div>
                     <div class="image-2">
                         <img src="/layout/img/banner/banner-2.jpg" alt="Image">

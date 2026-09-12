@@ -16,7 +16,7 @@ namespace MedAdvice.Models
         public int AdviceCategoryId { get; set; }
         [ForeignKey("AdviceCategoryId")]
         public AdviceCategory AdviceCategory { get; set; }
-        public byte[] AdviceHeaderImage { get; set; }
+        public string AdviceHeaderImagePath { get; set; }
         public List<AdviceImage> AdviceImages { get; set; }
     }
 }
