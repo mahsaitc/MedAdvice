@@ -1,0 +1,38 @@
+Id|AdviceCategoryname|AdviceCategoryPicturePath
+--|------------------|-------------------------
+139|General & Family Medicine|/uploads/advices/specialty-family-medicine.png
+140|Cardiology|/uploads/advices/specialty-cardiology.png
+141|Neurology|/uploads/advices/specialty-neurology.png
+142|Orthopedics & Bone Surgery|/uploads/advices/specialty-orthopedics.png
+143|Gastroenterology & Hepatology|/uploads/advices/specialty-gastroenterology.png
+144|Dermatology, Hair & Cosmetics|/uploads/advices/specialty-dermatology.png
+145|Obstetrics, Gynecology & Fertility|/uploads/advices/specialty-gynecology.png
+146|Pediatrics & Newborn Care|/uploads/advices/specialty-pediatrics.png
+147|Ophthalmology|/uploads/advices/specialty-ophthalmology.png
+148|Ear, Nose & Throat (ENT)|/uploads/advices/specialty-ent.png
+149|Urology|/uploads/advices/specialty-urology.png
+150|Endocrinology, Diabetes & Metabolism|/uploads/advices/specialty-endocrinology.png
+151|Psychiatry|/uploads/advices/specialty-psychiatry.png
+152|Psychology & Counseling|/uploads/advices/specialty-psychology.png
+153|Allergy & Immunology|/uploads/advices/specialty-allergy-immunology.png
+154|Hematology & Oncology|/uploads/advices/specialty-hematology-oncology.png
+155|Infectious Diseases|/uploads/advices/specialty-infectious-diseases.png
+156|Pulmonology (Lung & Respiratory)|/uploads/advices/specialty-pulmonology.png
+157|Rheumatology (Joints)|/uploads/advices/specialty-rheumatology.png
+158|General Surgery|/uploads/advices/specialty-general-surgery.png
+159|Neurosurgery|/uploads/advices/specialty-neurosurgery.png
+160|Plastic & Reconstructive Surgery|/uploads/advices/specialty-plastic-surgery.png
+161|Anesthesiology|/uploads/advices/specialty-anesthesiology.png
+162|Radiology & Imaging|/uploads/advices/specialty-radiology.png
+163|Pathology & Laboratory|/uploads/advices/specialty-pathology.png
+164|Emergency Medicine|/uploads/advices/specialty-emergency-medicine.png
+165|Physical Medicine & Rehabilitation|/uploads/advices/specialty-pmr.png
+166|Dentistry|/uploads/advices/specialty-dentistry.png
+167|Sports Medicine|/uploads/advices/specialty-sports-medicine.png
+168|Geriatric Medicine|/uploads/advices/specialty-geriatrics.png
+169|Nutrition & Dietetics|/uploads/advices/specialty-nutrition.png
+170|Sleep Medicine|/uploads/advices/specialty-sleep-medicine.png
+171|Acupuncture|/uploads/advices/specialty-acupuncture.png
+172|Catgut Embedding & Weight Management|/uploads/advices/specialty-catgut-embedding.png
+
+(34 rows affected)
